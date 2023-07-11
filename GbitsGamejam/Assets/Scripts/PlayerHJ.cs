@@ -30,24 +30,24 @@ public class PlayerHJ : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && nowJumpTimes < maxJumpTimes)
         {
-            if (rb.velocity.y >= 0)
-                rb.velocity += Vector2.up * jumpforce * 2;
-            else
-                rb.velocity =new Vector2(rb.velocity.x,jumpforce * 2);
+           // rb.AddForce(Vector2.up * jumpforce);
+            rb.velocity =new Vector2(rb.velocity.x,jumpforce);
             nowJumpTimes++;
         }
     }
     private void FixedUpdate()
     {
         if (Mathf.Abs(rb.velocity.y) < 0.1 && CheckIsOnGround())
+        {
+            if (!isOnGround)
+                nowJumpTimes = 0;
             isOnGround = true;
+        }
         else
             isOnGround = false;
-        if (isOnGround)
-            nowJumpTimes = 0;
         if (Input.GetKey(KeyCode.Space) && rb.velocity.y > 0)
         {
-            rb.velocity += Vector2.up * jumpCompensate * 0.02f;
+            rb.velocity += Vector2.up * jumpCompensate * Time.fixedDeltaTime;
         }
         //水平速度
         rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, rb.velocity.y);

@@ -1903,7 +1903,7 @@ TilemapCollider2D:
   m_GameObject: {fileID: 1961070617}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: ec2cbff277d683d4cb9653adc3ed0050, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -2047,7 +2047,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 2.8
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -2067,6 +2067,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 7
-  jumpforce: 5
-  jumpCompensate: 2
+  jumpforce: 50
+  jumpCompensate: 4
   maxJumpTimes: 2
