@@ -5,6 +5,11 @@ using UnityEngine;
 //横板跳跃玩家类
 public class PlayerHJ : MonoBehaviour
 {
+    //public enum State
+    //{
+    //    Idle,Move,OnAir
+    //}
+
     [Header("移动数据")]
     public float moveSpeed = 7f;
     public float jumpforce = 5f;
@@ -13,6 +18,7 @@ public class PlayerHJ : MonoBehaviour
 
     int nowJumpTimes = 0;
     bool isOnGround = true;
+    //State state = State.Move;
 
     Transform footTrans;
     Rigidbody2D rb;
@@ -50,7 +56,12 @@ public class PlayerHJ : MonoBehaviour
             rb.velocity += Vector2.up * jumpCompensate * Time.fixedDeltaTime;
         }
         //水平速度
-        rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, rb.velocity.y);
+        float y = 0;
+        if(!isOnGround)
+        {
+            y=rb.velocity.y;
+        }
+        rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, y);
     }
 
 
