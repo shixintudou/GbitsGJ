@@ -7,7 +7,7 @@ public class PlayerHJ : MonoBehaviour
 {
     [Header("移动数据")]
     public float moveSpeed = 7f;
-    public float jumpforce = 4f;
+    public float jumpforce = 5f;
     public float jumpCompensate = 2f;
     public int maxJumpTimes = 2;
 
@@ -30,7 +30,10 @@ public class PlayerHJ : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && nowJumpTimes < maxJumpTimes)
         {
-            rb.velocity += Vector2.up * jumpforce * 2;
+            if (rb.velocity.y >= 0)
+                rb.velocity += Vector2.up * jumpforce * 2;
+            else
+                rb.velocity =new Vector2(rb.velocity.x,jumpforce * 2);
             nowJumpTimes++;
         }
     }
@@ -49,11 +52,11 @@ public class PlayerHJ : MonoBehaviour
         //水平速度
         rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, rb.velocity.y);
     }
-  
+
 
     bool CheckIsOnGround()
     {
-        var bisOnGround =  Physics2D.OverlapCircle(footTrans.position, 0.8f,LayerMask.GetMask("Ground"));
+        var bisOnGround = Physics2D.OverlapCircle(footTrans.position, 0.2f, LayerMask.GetMask("Ground"));
         return bisOnGround;
     }
     private void OnDrawGizmos()
