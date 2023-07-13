@@ -18,6 +18,9 @@ public class PlayerHJ : MonoBehaviour
 
     int nowJumpTimes = 0;
     bool isOnGround = true;
+
+    [SerializeField]
+    private float pickRange;
     //State state = State.Move;
 
     Transform footTrans;
@@ -40,6 +43,7 @@ public class PlayerHJ : MonoBehaviour
             rb.velocity =new Vector2(rb.velocity.x,jumpforce);
             nowJumpTimes++;
         }
+        Pick();
     }
     private void FixedUpdate()
     {
@@ -63,7 +67,23 @@ public class PlayerHJ : MonoBehaviour
         }
         rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, y);
     }
+    public void Pick()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Collider2D pickCol = Physics2D.OverlapBox(transform.position, new Vector2(pickRange, pickRange), 0, 0B1000);
+            print(pickCol);
+            if (pickCol)
+            {
+                BasePick pick = pickCol.GetComponent<BasePick>();
+                if (pick && pick.CheckCondition())
+                {
 
+                    Dialog.instance.BeginShowDialog(pick.transform, pick.description, pick.OnDialogOver);
+                }
+            }
+        }
+    }
 
     bool CheckIsOnGround()
     {
