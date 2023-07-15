@@ -9,6 +9,7 @@ public class TimeSectionData
     public bool ifStarted;
     public bool ifEnded;
     public bool ifBug;
+    public Vector3 playerPositonOnSectionStart;
     public TimeSectionData(TimeSectionButton _button)
     {
         button = _button;
@@ -21,7 +22,6 @@ public class TimeSectionData
 public class TimeSectionManager : MonoBehaviour
 {
     public GameObject DarkCanvas;
-    public GameObject BugPrefab;
 
     List<TimeSectionData> timeSectionsData = new List<TimeSectionData>();
 
@@ -93,17 +93,19 @@ public class TimeSectionManager : MonoBehaviour
         DarkCanvas.SetActive(false);
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
     }
+
     //玩家点击对应按钮手动结束当前时间段
     public void FinishThisTimeSection()
     {
         //判定是否可以结束
-        if (true)
+        if (true&& !timeSectionsData[NowTimeSection].ifEnded)
         {
             PlayerHJ player = GameMode.Instance.Player;
             if (player)
             {
-                Instantiate(BugPrefab, player.gameObject.transform);
+                Instantiate(ResoucesManager.Instance.Resouces["LogicBug"],player.transform.position,Quaternion.identity);
                 timeSectionsData[NowTimeSection].ifEnded = true;
+                GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
             }
         }
     }
@@ -118,8 +120,10 @@ public class TimeSectionManager : MonoBehaviour
 
     public void ResetThisSection()
     {
-        timeSectionsData[NowTimeSection].ifEnded = false;
-        timeSectionsData[NowTimeSection].ifBug = false;
+        var data = timeSectionsData[NowTimeSection];
+        data.ifEnded = false;
+        data.ifBug = false;
+        
     }
     public int GetNowLogicBugNum()
     {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public enum GamePlayMode
 {
     Play,Replay,UIInteract
@@ -73,7 +74,19 @@ public class GameMode : MonoBehaviour
 
     public void SetGameMode(GamePlayMode playMode)
     {
+        if(gamePlayMode != playMode)
+        {
         gamePlayMode = playMode;
+            if (playMode == GamePlayMode.UIInteract)
+            {
+                Time.timeScale = 0;
+                if(Player)
+                Player.rb.velocity = Vector2.zero;
+            }
+            else
+                Time.timeScale = 1;
+                
+        }
     }
 
     //检查是否通关
@@ -89,15 +102,15 @@ public class GameMode : MonoBehaviour
         return timeSectionManager.GetNowLogicBugNum() == 0&&keysFinished;
     }
 
-    //重置过关判定
-    public void ResetKeysState()
+    //重载关卡
+    public void ResetLevel()
     {
-        foreach (var key in KeysRequiredToPass)
-            KeysRequiredToPass[key.Key] = false;
+       SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void OnPlayerTouchSectionBug(int bugSectionBelongTo)
     {
 
     }
+
 }

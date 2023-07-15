@@ -42,7 +42,6 @@ public class TimeSectionButton : MonoBehaviour
 
     void OnButtonClick()
     {
-        print(index);
         timeSectionManager.TrySelectTimeSectionIndex(index);
     }
 }

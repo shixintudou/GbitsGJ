@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResoucesManager : MonoBehaviour
+public class ResoucesManager:Object
 {
     private static ResoucesManager instance;
     public static ResoucesManager Instance
@@ -20,5 +20,9 @@ public class ResoucesManager : MonoBehaviour
         var arrays = Resources.LoadAll("Prefabs/");
         foreach (var array in arrays)
             Resouces.Add(array.name, array as GameObject);
+        foreach (var item in Resouces)
+        {
+            Debug.Log("º”‘ÿ‘§÷∆ÃÂ"+item.Key);
+        }
     }
 }
