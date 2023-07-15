@@ -37,15 +37,29 @@ public class PlayerHJ : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && nowJumpTimes < maxJumpTimes)
+        if (GameMode.gamePlayMode == GamePlayMode.Play)
         {
-           // rb.AddForce(Vector2.up * jumpforce);
-            rb.velocity =new Vector2(rb.velocity.x,jumpforce);
-            nowJumpTimes++;
+            ControlMoveMentUpdate();
+            Pick();
         }
-        Pick();
     }
     private void FixedUpdate()
+    {
+        if (GameMode.gamePlayMode == GamePlayMode.Play)
+        {
+            ControlMoveMentFixupdate();
+        }
+    }
+    public void ControlMoveMentUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && nowJumpTimes < maxJumpTimes)
+        {
+            // rb.AddForce(Vector2.up * jumpforce);
+            rb.velocity = new Vector2(rb.velocity.x, jumpforce);
+            nowJumpTimes++;
+        }
+    }
+    public void ControlMoveMentFixupdate()
     {
         if (Mathf.Abs(rb.velocity.y) < 0.1 && CheckIsOnGround())
         {
@@ -61,9 +75,9 @@ public class PlayerHJ : MonoBehaviour
         }
         //水平速度
         float y = 0;
-        if(!isOnGround)
+        if (!isOnGround)
         {
-            y=rb.velocity.y;
+            y = rb.velocity.y;
         }
         rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, y);
     }
