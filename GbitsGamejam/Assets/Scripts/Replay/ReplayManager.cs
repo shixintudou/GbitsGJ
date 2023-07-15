@@ -53,6 +53,7 @@ public class ReplayManager : MonoBehaviour
             StartCoroutine(ReplayClip(player, time, data));
             yield return new WaitForSeconds(time);
         }
+        GameMode.Instance.SetGameMode(GamePlayMode.Play);
     }
     IEnumerator ReplayClip(PlayerHJ player ,float time ,PlayData data)
     {

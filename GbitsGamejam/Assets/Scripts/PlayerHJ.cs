@@ -34,7 +34,7 @@ public class PlayerHJ : MonoBehaviour
         footTrans = transform.Find("foot");
         if (footTrans == null)
             print("Œ¥ªÒ»°playerfoot");
-
+        ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
     }
     void Update()
     {
