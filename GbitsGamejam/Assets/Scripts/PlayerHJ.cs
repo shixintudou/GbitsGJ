@@ -25,6 +25,7 @@ public class PlayerHJ : MonoBehaviour
 
     Transform footTrans;
     Rigidbody2D rb;
+    Coroutine moveCoroutine;
 
     // Start is called before the first frame update
     void Start()
@@ -55,10 +56,16 @@ public class PlayerHJ : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && nowJumpTimes < maxJumpTimes)
         {
             // rb.AddForce(Vector2.up * jumpforce);
-            rb.velocity = new Vector2(rb.velocity.x, jumpforce);
-            nowJumpTimes++;
+            Jump();
         }
     }
+
+    public void Jump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, jumpforce);
+        nowJumpTimes++;
+    }
+
     public void ControlMoveMentFixupdate()
     {
         if (Mathf.Abs(rb.velocity.y) < 0.1 && CheckIsOnGround())
@@ -81,6 +88,15 @@ public class PlayerHJ : MonoBehaviour
         }
         rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, y);
     }
+    public void MoveWithTargetAndTime(float target,float time)
+    {
+        if(moveCoroutine!=null)
+        {
+            StopCoroutine(moveCoroutine);
+        }
+        moveCoroutine = StartCoroutine(MoveCoroutine(target, time));
+    }
+    
     public void Pick()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -104,8 +120,17 @@ public class PlayerHJ : MonoBehaviour
         var bisOnGround = Physics2D.OverlapCircle(footTrans.position, 0.2f, LayerMask.GetMask("Ground"));
         return bisOnGround;
     }
-    private void OnDrawGizmos()
+
+    IEnumerator MoveCoroutine(float target, float time)
     {
+        float t = 0;
+        while(t<time)
+        {
+            rb.velocity = new Vector2(target * moveSpeed, rb.velocity.y);
+            t += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        rb.velocity = new Vector2(0, rb.velocity.y);
     }
 
 }
