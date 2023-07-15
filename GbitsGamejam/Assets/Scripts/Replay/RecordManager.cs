@@ -9,6 +9,7 @@ public class RecordManager : MonoBehaviour
     public bool startRecord;
     public float time;
     public List<float> jumpTimes;
+    public LaganController lagan;
     private void Awake()
     {
         if (instance == null)
@@ -33,6 +34,7 @@ public class RecordManager : MonoBehaviour
         endRecord = false;
         startRecord = true;
         jumpTimes = new List<float>();
+        lagan = null;
         StartCoroutine(RecordCoroutine(num));
     }
     IEnumerator RecordCoroutine(int num)
@@ -89,8 +91,10 @@ public class RecordManager : MonoBehaviour
             data.horizonData.Add(horizontalTimeData);
         }
         data.jumpTimes = jumpTimes;
+        data.lagan = lagan;
         ReplayManager.instance.datas[num]= data;
         startRecord = false;
+        lagan = null;
     }
     public void AddJumpTimes()
     {

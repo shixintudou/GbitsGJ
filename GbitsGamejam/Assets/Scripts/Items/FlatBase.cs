@@ -20,4 +20,8 @@ public class FlatBase : MonoBehaviour
     {
         
     }
+    public virtual void FlatDisable()
+    {
+
+    }
 }

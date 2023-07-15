@@ -42,15 +42,13 @@ public class PlayerHJ : MonoBehaviour
         if (GameMode.GamePlayMode == GamePlayMode.Play)
         {
             ControlMoveMentUpdate();
+            ControlMoveMentFixupdate();
             Pick();
         }
     }
     private void FixedUpdate()
     {
-        if (GameMode.GamePlayMode == GamePlayMode.Play)
-        {
-            ControlMoveMentFixupdate();
-        }
+        
     }
     public void ControlMoveMentUpdate()
     {
@@ -100,6 +98,7 @@ public class PlayerHJ : MonoBehaviour
             StopCoroutine(moveCoroutine);
         }
         moveCoroutine = StartCoroutine(MoveCoroutine(target, time));
+        transform.localScale = new Vector3(target > 0 ? -1 : 1, 1, 1);
     }
     
     public void Pick()
@@ -116,6 +115,7 @@ public class PlayerHJ : MonoBehaviour
                     pick.BePicked();
                     if (Dialog.instance != null)
                         Dialog.instance.BeginShowDialog(pick.transform, pick.description, pick.OnDialogOver);
+
                 }
             }
         }
@@ -136,8 +136,8 @@ public class PlayerHJ : MonoBehaviour
         while(t<time)
         {
             rb.velocity = new Vector2(target * moveSpeed, rb.velocity.y);
-            t += Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
+            t += Time.deltaTime;
+            yield return null;
         }
         rb.velocity = new Vector2(0, rb.velocity.y);
     }

@@ -5,10 +5,11 @@ using UnityEngine;
 public class TargetFlat : FlatBase
 {
     public Vector2 targetPosition;
+    public Vector2 startPostion;
     // Start is called before the first frame update
     void Start()
     {
-        
+        startPostion = transform.position;
     }
 
     // Update is called once per frame
@@ -19,6 +20,10 @@ public class TargetFlat : FlatBase
     public override void FlatEnable()
     {
         StartCoroutine(MoveCoroutine());
+    }
+    public override void FlatDisable()
+    {
+        transform.position = startPostion;
     }
     IEnumerator MoveCoroutine()
     {

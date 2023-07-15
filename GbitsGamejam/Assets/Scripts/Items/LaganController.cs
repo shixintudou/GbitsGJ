@@ -24,6 +24,7 @@ public class LaganController : BasePick
         if (controlledFlat != null)
             controlledFlat.FlatEnable();
         //¼ì²âÊÇ·ñ¹ý¹Ø
+        RecordManager.instance.lagan = this;
         GameMode.Instance.CheckIfPass();
         StartCoroutine(MoveEndCoroutine());
     }
