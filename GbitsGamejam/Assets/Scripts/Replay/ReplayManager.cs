@@ -45,6 +45,7 @@ public class ReplayManager : MonoBehaviour
         GameMode.Instance.SetGameMode(GamePlayMode.Replay);
         PlayerHJ player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHJ>();
         player.transform.position = startPos;
+        player.rb.velocity = Vector2.zero;
         if(replayCoroutine!=null)
         {
             StopCoroutine(replayCoroutine);

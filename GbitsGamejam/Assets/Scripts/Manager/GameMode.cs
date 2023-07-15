@@ -25,7 +25,7 @@ public class GameMode : MonoBehaviour
 
     [Header("关卡配置")]
     public int TimeSectionNum;
-    public Transform DefaultBornTrans;
+    public Vector3 DefaultBornTrans;
     //0为自由状态 1-N分别为选中了第N段可分配时间段
 
 
@@ -127,7 +127,7 @@ public class GameMode : MonoBehaviour
     IEnumerator ReplayCoroutine()
     {
         yield return 0.3f;
-        ReplayManager.instance.StartReplay(DefaultBornTrans.position);
+        ReplayManager.instance.StartReplay(DefaultBornTrans);
     }
 
     //重载关卡

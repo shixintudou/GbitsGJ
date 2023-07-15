@@ -101,8 +101,8 @@ public class TimeSectionManager : MonoBehaviour
             if (number == 1)
             {
                 //玩家转移到默认出生点
-                GameMode.Instance.SetPlayerPos(GameMode.Instance.DefaultBornTrans.position);
-                timeSectionsDataList[0].playerPositonOnSectionStart = GameMode.Instance.DefaultBornTrans.position;
+                GameMode.Instance.SetPlayerPos(GameMode.Instance.DefaultBornTrans);
+                timeSectionsDataList[0].playerPositonOnSectionStart = GameMode.Instance.DefaultBornTrans;
                 StartSection();
                 GameMode.Instance.SetGameMode(GamePlayMode.Play);
             }
