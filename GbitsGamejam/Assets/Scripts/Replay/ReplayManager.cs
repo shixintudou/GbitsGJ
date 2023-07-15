@@ -34,7 +34,11 @@ public class ReplayManager : MonoBehaviour
     }
     public void SetDataNum(int num)
     {
-        datas = new List<PlayData>(num);
+        datas=new List<PlayData>();
+        for(int i=0;i<num;i++)
+        {
+            datas.Add(new PlayData());
+        }
     }
     public void StartReplay(Vector2 startPos)
     {
