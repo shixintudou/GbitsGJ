@@ -13,8 +13,6 @@ public class GameMode : MonoBehaviour
     {
         get
         {
-            if (instance == null)
-                instance = new GameMode();
             return instance;
         }
     }
@@ -38,6 +36,17 @@ public class GameMode : MonoBehaviour
 
     Dictionary<SwitchToPass, bool> KeysRequiredToPass=new Dictionary<SwitchToPass, bool>();
 
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else if(instance!=this)
+        {
+            Destroy(this);
+        }
+    }
     void Start()
     {
         //单例
@@ -47,7 +56,7 @@ public class GameMode : MonoBehaviour
             instance = this;
         }
         //获取场景中过关所需的开关，注册状态
-       var keys= (SwitchToPass[])FindObjectsOfType(typeof(SwitchToPass));
+        var keys= FindObjectsOfType<SwitchToPass>();
         foreach (var key in keys)
             KeysRequiredToPass.Add(key, false);
         //获取场景中时间轴组件
