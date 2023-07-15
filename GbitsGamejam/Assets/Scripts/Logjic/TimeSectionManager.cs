@@ -101,8 +101,8 @@ public class TimeSectionManager : MonoBehaviour
             if (number == 1)
             {
                 //玩家转移到默认出生点
-                GameMode.Instance.SetPlayerPos(GameMode.Instance.DefaultBornTrans);
-                timeSectionsDataList[0].playerPositonOnSectionStart = GameMode.Instance.DefaultBornTrans;
+                GameMode.Instance.SetPlayerPos(GameMode.Instance.DefaultBornPos);
+                timeSectionsDataList[0].playerPositonOnSectionStart = GameMode.Instance.DefaultBornPos;
                 StartSection();
                 GameMode.Instance.SetGameMode(GamePlayMode.Play);
             }
@@ -191,13 +191,13 @@ public class TimeSectionManager : MonoBehaviour
             GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
     }
 
-    void StartSection()
+   pu void StartSection()
     {
         //结束记录
         timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
         RecordManager.instance.StartRecord(nowTimeSection - 1);
     }
-    void EndSection()
+    public void EndSection()
     {
         //结束记录
         timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
