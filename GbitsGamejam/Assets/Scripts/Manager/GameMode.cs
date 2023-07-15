@@ -72,13 +72,17 @@ public class GameMode : MonoBehaviour
         m_UIManager = GetComponent<LUIManager>();
         if (m_UIManager == null)
             m_UIManager = gameObject.AddComponent<LUIManager>();
-        print(m_UIManager == null);
-
     }
 
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ResetLevel();
+            return;
+        }
+        if(Input.GetKeyDown(KeyCode.Return))
+            timeSectionManager.FinishThisTimeSection();
     }
 
     public void SetGameMode(GamePlayMode playMode)

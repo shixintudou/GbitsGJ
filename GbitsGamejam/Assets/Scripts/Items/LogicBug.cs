@@ -21,7 +21,6 @@ public class LogicBug : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        print("Åö×²" + collision.gameObject);
         if (collision.gameObject.tag == "Player")
         {
             GameMode.Instance.OnPlayerTouchSectionBug(SectionIndex,this);

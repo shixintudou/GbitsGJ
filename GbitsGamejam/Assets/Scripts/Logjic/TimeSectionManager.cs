@@ -122,6 +122,19 @@ public class TimeSectionManager : MonoBehaviour
     {
         isSelectingPosition = false;
         DarkCanvas.SetActive(false);
+        PlayerHJ player = GameMode.Instance.Player;
+        if (player)
+        {
+            //Éú³ÉÂß¼­Â©¶´
+            var Bug_obj = Instantiate(ResoucesManager.Instance.Resouces["LogicBug"], player.transform.position, Quaternion.identity);
+            LogicBug bug = Bug_obj.GetComponent<LogicBug>();
+            if (bug)
+            {
+                bug.SetSectionIndex(nowTimeSection);
+            }
+            timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionStart = player.transform.position;
+            timeSectionsDataList[NowTimeSection - 1].ifBug = true;
+        }
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
         timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
     }
@@ -135,15 +148,7 @@ public class TimeSectionManager : MonoBehaviour
             PlayerHJ player = GameMode.Instance.Player;
             if (player)
             {
-                //Éú³ÉÂß¼­Â©¶´
-               var Bug_obj= Instantiate(ResoucesManager.Instance.Resouces["LogicBug"], player.transform.position, Quaternion.identity);
-                LogicBug bug=Bug_obj.GetComponent<LogicBug>();
-                if (bug)
-                {
-                    bug.SetSectionIndex(nowTimeSection);
-                }
                 timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionEnd = player.transform.position;
-                timeSectionsDataList[NowTimeSection - 1].ifBug = true;
                 timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
                 GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
             }
