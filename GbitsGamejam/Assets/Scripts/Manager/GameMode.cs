@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public enum GamePlayMode
 {
-    Play,Replay,UIInteract
+    Play, Replay, UIInteract
 }
 
 public class GameMode : MonoBehaviour
@@ -20,6 +20,8 @@ public class GameMode : MonoBehaviour
 
     [HideInInspector]
     public TimeSectionManager timeSectionManager;
+    [HideInInspector]
+    public LUIManager m_UIManager;
 
     [Header("关卡配置")]
     public int TimeSectionNum;
@@ -32,24 +34,25 @@ public class GameMode : MonoBehaviour
 
     public PlayerHJ Player
     {
-        get => GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>(); 
+        get => GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>();
     }
 
-    Dictionary<SwitchToPass, bool> KeysRequiredToPass=new Dictionary<SwitchToPass, bool>();
+    Dictionary<SwitchToPass, bool> KeysRequiredToPass = new Dictionary<SwitchToPass, bool>();
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
-        else if(instance!=this)
+        else if (instance != this)
         {
             Destroy(this);
         }
     }
     void Start()
     {
+        var aa = ResoucesManager.Instance.Resouces["LogicBug"];
         //单例
         if (instance != this)
         {
@@ -57,60 +60,88 @@ public class GameMode : MonoBehaviour
             instance = this;
         }
         //获取场景中过关所需的开关，注册状态
-        var keys= FindObjectsOfType<SwitchToPass>();
+        var keys = FindObjectsOfType<SwitchToPass>();
         foreach (var key in keys)
             KeysRequiredToPass.Add(key, false);
+
         //获取场景中时间轴组件
-        timeSectionManager=FindObjectOfType<TimeSectionManager>();
+        timeSectionManager = FindObjectOfType<TimeSectionManager>();
         if (timeSectionManager == null)
             print("场景中缺少TimeSectionManager!");
 
+        m_UIManager = GetComponent<LUIManager>();
+        if (m_UIManager == null)
+            m_UIManager = gameObject.AddComponent<LUIManager>();
     }
 
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ResetLevel();
+            return;
+        }
+        if(Input.GetKeyDown(KeyCode.Return))
+            timeSectionManager.FinishThisTimeSection();
     }
 
     public void SetGameMode(GamePlayMode playMode)
     {
-        if(gamePlayMode != playMode)
+        if (gamePlayMode != playMode)
         {
-        gamePlayMode = playMode;
+            gamePlayMode = playMode;
             if (playMode == GamePlayMode.UIInteract)
             {
                 Time.timeScale = 0;
-                if(Player)
-                Player.rb.velocity = Vector2.zero;
+                if (Player)
+                    Player.rb.velocity = Vector2.zero;
             }
             else
                 Time.timeScale = 1;
-                
+
         }
     }
 
     //检查是否通关
-    bool CheckIfPass()
+    public bool CheckIfPass()
     {
-        bool keysFinished=false;
+        bool keysFinished = false;
         foreach (var key in KeysRequiredToPass)
             if (!key.Value)
             {
                 keysFinished = false;
                 break;
             }
-        return timeSectionManager.GetNowLogicBugNum() == 0&&keysFinished;
+        bool ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && keysFinished;
+        if (ifPass)
+            print("过关成功！");
+        return ifPass;
     }
 
     //重载关卡
     public void ResetLevel()
     {
-       SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void OnPlayerTouchSectionBug(int bugSectionBelongTo)
+    /// <summary>
+    /// 当玩家接触到逻辑漏洞
+    /// </summary>
+    /// <param name="bugSectionBelongTo"></param>
+    /// <param name="Bug_obj"></param>
+    public void OnPlayerTouchSectionBug(int bugSectionBelongTo, LogicBug Bug_obj)
     {
-
+        //是下一段的逻辑漏洞
+        if ((timeSectionManager.NowTimeSection + 1) == bugSectionBelongTo)
+        {
+            timeSectionManager.OnClearABug(Bug_obj.gameObject);
+            Destroy(Bug_obj.gameObject);
+        }
     }
-
+    public void SetPlayerPos(Vector3 postion)
+    {
+        PlayerHJ player = GameMode.Instance.Player;
+        if (player)
+            player.transform.position = postion;
+    }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResoucesManager:Object
+public class ResoucesManager
 {
     private static ResoucesManager instance;
     public static ResoucesManager Instance
