@@ -22,10 +22,12 @@ public class GameMode : MonoBehaviour
     public TimeSectionManager timeSectionManager;
     [HideInInspector]
     public LUIManager m_UIManager;
+    bool ifPass;
+    public bool IfPass { get => ifPass; }
 
     [Header("关卡配置")]
     public int TimeSectionNum;
-    public Vector3 DefaultBornTrans;
+    public Vector3 DefaultBornPos;
     //0为自由状态 1-N分别为选中了第N段可分配时间段
 
 
@@ -52,7 +54,6 @@ public class GameMode : MonoBehaviour
     }
     void Start()
     {
-        var aa = ResoucesManager.Instance.Resouces["LogicBug"];
         //单例
         if (instance != this)
         {
@@ -63,6 +64,8 @@ public class GameMode : MonoBehaviour
         var keys = FindObjectsOfType<LaganController>();
         foreach (var key in keys)
             laganRequiredToPass.Add(key);
+        //记录玩家出生位置
+        DefaultBornPos=Player.transform.position;
 
         //获取场景中时间轴组件
         timeSectionManager = FindObjectOfType<TimeSectionManager>();
@@ -112,7 +115,7 @@ public class GameMode : MonoBehaviour
                 laganFinished = false;
                 break;
             }
-        bool ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && laganFinished;
+        ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && laganFinished;
         if (ifPass)
             OnSuccessPassed();
         return ifPass;
@@ -127,7 +130,7 @@ public class GameMode : MonoBehaviour
     IEnumerator ReplayCoroutine()
     {
         yield return 0.3f;
-        ReplayManager.instance.StartReplay(DefaultBornTrans);
+        ReplayManager.instance.StartReplay(DefaultBornPos);
     }
 
     //重载关卡
