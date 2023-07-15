@@ -100,6 +100,7 @@ public class PlayerHJ : MonoBehaviour
             StopCoroutine(moveCoroutine);
         }
         moveCoroutine = StartCoroutine(MoveCoroutine(target, time));
+        transform.localScale = new Vector3(target > 0 ? -1 : 1, 1, 1);
     }
     
     public void Pick()
