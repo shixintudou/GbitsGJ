@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:GbitsGamejam/Assets/Art/ItemAnim.meta
+guid: 38dc99a4d9bb924408443538206f719a
+========
 guid: 1d9d76d391281b54f9a6052c84017d13
+>>>>>>>> 660c1fbdba82d3359d8743961df84171e224fc21:GbitsGamejam/Assets/PipelineSetting/ComputeShaders.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

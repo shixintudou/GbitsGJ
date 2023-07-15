@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:GbitsGamejam/Assets/Scripts/Player.meta
+guid: 795ace29ad2a73440b8e8b78272fe4b0
+========
 guid: a4b51c516f245144187f2e3cf9ce7df8
+>>>>>>>> 660c1fbdba82d3359d8743961df84171e224fc21:GbitsGamejam/Assets/Scripts/Render.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

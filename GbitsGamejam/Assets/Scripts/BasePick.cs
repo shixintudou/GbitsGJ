@@ -20,4 +20,8 @@ public class BasePick : MonoBehaviour
     {
 
     }
+    public virtual void BePicked()
+    {
+
+    }
 }
