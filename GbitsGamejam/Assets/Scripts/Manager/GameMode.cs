@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public enum GamePlayMode
 {
-    Play,Replay
+    Play,Replay,UIInteract
 }
 
 public class GameMode : MonoBehaviour
@@ -19,15 +19,18 @@ public class GameMode : MonoBehaviour
         }
     }
 
+
+    TimeSectionManager timeSectionManager;
+
+    [Header("关卡配置")]
     public int TimeSectionNum;
     //0为自由状态 1-N分别为选中了第N段可分配时间段
-    private int nowTimeSection;
-    public int NowTimeSection { get => nowTimeSection; }
 
-    public static GamePlayMode gamePlayMode;
 
-    public Dictionary<SwitchToPass, bool> KeysRequiredToPass;
-    private int NowLogicBugsNum;
+    private static GamePlayMode gamePlayMode;
+    public static GamePlayMode GamePlayMode { get => gamePlayMode; }
+
+    Dictionary<SwitchToPass, bool> KeysRequiredToPass;
 
     void Start()
     {
@@ -41,6 +44,10 @@ public class GameMode : MonoBehaviour
        var keys= (SwitchToPass[])FindObjectsOfType(typeof(SwitchToPass));
         foreach (var key in keys)
             KeysRequiredToPass.Add(key, false);
+        //获取场景中0时间轴组件
+        timeSectionManager=FindObjectOfType<TimeSectionManager>();
+        if (timeSectionManager == null)
+            print("场景中缺少TimeSectionManager!");
 
     }
 
@@ -49,11 +56,11 @@ public class GameMode : MonoBehaviour
         
     }
 
-    void SelectTimeSectionIndex(int index)
+    public void SetGameMode(GamePlayMode playMode)
     {
-        if (index < 0||index>TimeSectionNum) return;
-        nowTimeSection = index;
+        gamePlayMode = playMode;
     }
+
     //检查是否通关
     bool CheckIfPass()
     {
@@ -64,7 +71,7 @@ public class GameMode : MonoBehaviour
                 keysFinished = false;
                 break;
             }
-        return NowLogicBugsNum == 0&&keysFinished;
+        return timeSectionManager.GetNowLogicBugNum() == 0&&keysFinished;
     }
 
     //重置过关判定
@@ -72,6 +79,5 @@ public class GameMode : MonoBehaviour
     {
         foreach (var key in KeysRequiredToPass)
             KeysRequiredToPass[key.Key] = false;
-        NowLogicBugsNum++;
     }
 }

@@ -37,7 +37,7 @@ public class PlayerHJ : MonoBehaviour
     }
     void Update()
     {
-        if (GameMode.gamePlayMode == GamePlayMode.Play)
+        if (GameMode.GamePlayMode == GamePlayMode.Play)
         {
             ControlMoveMentUpdate();
             Pick();
@@ -45,7 +45,7 @@ public class PlayerHJ : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (GameMode.gamePlayMode == GamePlayMode.Play)
+        if (GameMode.GamePlayMode == GamePlayMode.Play)
         {
             ControlMoveMentFixupdate();
         }
