@@ -5,14 +5,14 @@ using Unity.Mathematics;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class ShakeRenderPass : ScriptableRenderPass
+public class OldTVRenderPass : ScriptableRenderPass
 {
-    private ShakeRendererFeature.ShakeSettings settings;
-    private RenderTexture ShakeRT;
+    private OldTVRendererFeature.OldTVSettings settings;
+    private RenderTexture OldTVRT;
     private ComputeShader computeShader;
     public static int originID;
     public static int targetID;
-    public ShakeRenderPass(ShakeRendererFeature.ShakeSettings settings)
+    public OldTVRenderPass(OldTVRendererFeature.OldTVSettings settings)
     {
         this.settings = settings;
         this.computeShader = settings.computeShader;
@@ -49,7 +49,14 @@ public class ShakeRenderPass : ScriptableRenderPass
             cmd.GetTemporaryRT(originID, descriptor1);
             cmd.GetTemporaryRT(targetID, descriptor2);
 
-            cmd.SetComputeFloatParam(settings.computeShader, "_ShakeIntensity", settings.shakeIntensity);
+
+            cmd.SetComputeFloatParam(settings.computeShader, "_OldTVIntensity", settings.OldTVIntensity);
+            cmd.SetComputeFloatParam(settings.computeShader, "_Smoothness", settings.smoothness);
+            cmd.SetComputeFloatParam(settings.computeShader, "_Roundness", settings.roundness);
+            cmd.SetComputeFloatParam(settings.computeShader, "_NoiseSpeed", settings.noiseSpeed);
+            cmd.SetComputeFloatParam(settings.computeShader, "_NoiseFading", settings.noiseFading);
+
+
             cmd.SetComputeVectorParam(settings.computeShader, "_BufferSize", new float4(width, height, 1.0f / width, 1.0f / height));
             cmd.SetComputeTextureParam(settings.computeShader, 0, "_MainTex", originID);
             cmd.SetComputeTextureParam(settings.computeShader, 0, "Result", targetID);
