@@ -191,7 +191,7 @@ public class TimeSectionManager : MonoBehaviour
             GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
     }
 
-   pu void StartSection()
+   public void StartSection()
     {
         //½áÊø¼ÇÂ¼
         timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
