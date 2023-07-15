@@ -72,6 +72,11 @@ public class RecordManager : MonoBehaviour
             time+= Time.deltaTime;
             yield return null;
         }
+        if (horizontalTimeData.endTime<=horizontalTimeData.startTime&&Mathf.Abs(horizontalTimeData.val)>0.1f)
+        {
+            horizontalTimeData.endTime = time;
+            data.horizonData.Add(horizontalTimeData);
+        }
         ReplayManager.instance.datas[num]= data;
     }
 }

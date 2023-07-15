@@ -19,6 +19,8 @@ public class ReplayManager : MonoBehaviour
 {
     public static ReplayManager instance;
     public List<PlayData> datas;
+
+    Coroutine replayCoroutine;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -31,8 +33,55 @@ public class ReplayManager : MonoBehaviour
     {
         datas = new List<PlayData>(num);
     }
-    public void StartReplay()
+    public void StartReplay(Vector2 startPos)
     {
+        GameMode.Instance.SetGameMode(GamePlayMode.Replay);
+        PlayerHJ player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHJ>();
+        player.transform.position = startPos;
+        if(replayCoroutine!=null)
+        {
+            StopCoroutine(replayCoroutine);
+        }
+        replayCoroutine = StartCoroutine(RePlayCoroutine(player));
+    }
 
+    IEnumerator RePlayCoroutine(PlayerHJ player)
+    {
+        foreach(PlayData data in datas)
+        {
+            float time = data.horizonData[data.horizonData.Count - 1].endTime;
+            StartCoroutine(ReplayClip(player, time, data));
+            yield return new WaitForSeconds(time);
+        }
+    }
+    IEnumerator ReplayClip(PlayerHJ player ,float time ,PlayData data)
+    {
+        int jumpIndex = 0;
+        int horiIndex = 0;
+        float t = 0f;
+        List<HorizontalTimeData> horizontalData = data.horizonData;
+        List<float> jumpTimes = data.jumpTimes;
+        while (t<time)
+        {
+            if(jumpIndex < jumpTimes.Count)
+            {
+                if (jumpTimes[jumpIndex]<=t)
+                {
+                    player.Jump();
+                    jumpIndex++;
+                }
+            }
+            if(horiIndex<horizontalData.Count)
+            {
+                if (t >= horizontalData[horiIndex].startTime)
+                {
+                    var temp = horizontalData[horiIndex];
+                    player.MoveWithTargetAndTime(temp.val, temp.endTime - temp.startTime);
+                    horiIndex++;
+                }
+            }
+            t += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
     }
 }
