@@ -116,6 +116,7 @@ public class PlayerHJ : MonoBehaviour
                     pick.BePicked();
                     if (Dialog.instance != null)
                         Dialog.instance.BeginShowDialog(pick.transform, pick.description, pick.OnDialogOver);
+
                 }
             }
         }

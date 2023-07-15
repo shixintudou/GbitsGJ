@@ -16,6 +16,7 @@ public struct PlayData
 {
     public List<HorizontalTimeData> horizonData;
     public List<float> jumpTimes;
+    public LaganController lagan;
 }
 public class ReplayManager : MonoBehaviour
 {
@@ -49,7 +50,7 @@ public class ReplayManager : MonoBehaviour
         if(replayCoroutine!=null)
         {
             StopCoroutine(replayCoroutine);
-        }
+        }       
         replayCoroutine = StartCoroutine(RePlayCoroutine(player));
     }
 
@@ -58,6 +59,10 @@ public class ReplayManager : MonoBehaviour
         foreach(PlayData data in datas)
         {
             float time = data.horizonData[data.horizonData.Count - 1].endTime;
+            if(data.lagan!=null)
+            {
+                data.lagan.controlledFlat.FlatDisable();
+            }
             StartCoroutine(ReplayClip(player, time, data));
             yield return new WaitForSeconds(time);
         }
