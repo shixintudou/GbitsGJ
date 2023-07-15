@@ -1,0 +1,29 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel ColorInvert
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+float4 _BufferSize;
+float _ShakeIntensity;
+Texture2D _MainTex;
+Texture2D _CameraColorTexture;
+RWTexture2D<float4> Result;
+
+SAMPLER(sampler_linear_clamp);
+
+
+
+[numthreads(8,8,1)]
+void ColorInvert(uint3 id : SV_DispatchThreadID)
+{
+    float2 resolution = _BufferSize.xy;
+    float2 invResolution = _BufferSize.zw;
+    float2 uv = (id.xy + 0.5) * invResolution;
+
+    float4 sceneColor = _CameraColorTexture.SampleLevel(sampler_linear_clamp, uv, 0);
+    sceneColor = saturate(float4(1,1,1,1) - sceneColor);
+    
+    Result[id.xy] = sceneColor;
+}
