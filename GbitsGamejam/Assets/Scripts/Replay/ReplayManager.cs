@@ -35,8 +35,8 @@ public class ReplayManager : MonoBehaviour
     }
     public void SetDataNum(int num)
     {
-        datas=new List<PlayData>();
-        for(int i=0;i<num;i++)
+        datas = new List<PlayData>();
+        for (int i = 0; i < num; i++)
         {
             datas.Add(new PlayData());
         }
@@ -47,19 +47,19 @@ public class ReplayManager : MonoBehaviour
         PlayerHJ player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHJ>();
         player.transform.position = startPos;
         player.rb.velocity = Vector2.zero;
-        if(replayCoroutine!=null)
+        if (replayCoroutine != null)
         {
             StopCoroutine(replayCoroutine);
-        }       
+        }
         replayCoroutine = StartCoroutine(RePlayCoroutine(player));
     }
 
     IEnumerator RePlayCoroutine(PlayerHJ player)
     {
-        foreach(PlayData data in datas)
+        foreach (PlayData data in datas)
         {
             float time = data.horizonData[data.horizonData.Count - 1].endTime;
-            if(data.lagan!=null)
+            if (data.lagan != null)
             {
                 data.lagan.controlledFlat.FlatDisable();
             }
@@ -68,29 +68,31 @@ public class ReplayManager : MonoBehaviour
         }
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
     }
-    IEnumerator ReplayClip(PlayerHJ player ,float time ,PlayData data)
+    IEnumerator ReplayClip(PlayerHJ player, float time, PlayData data)
     {
         int jumpIndex = 0;
         int horiIndex = 0;
         float t = 0f;
         List<HorizontalTimeData> horizontalData = data.horizonData;
         List<float> jumpTimes = data.jumpTimes;
-        while (t<time)
+        while (t < time)
         {
-            if(jumpIndex < jumpTimes.Count)
+            if (jumpIndex < jumpTimes.Count)
             {
-                if (jumpTimes[jumpIndex]<=t)
+                if (jumpTimes[jumpIndex] <= t)
                 {
-                    player.Jump();
+                    if (player)
+                        player.Jump();
                     jumpIndex++;
                 }
             }
-            if(horiIndex<horizontalData.Count)
+            if (horiIndex < horizontalData.Count)
             {
                 if (t >= horizontalData[horiIndex].startTime)
                 {
                     var temp = horizontalData[horiIndex];
-                    player.MoveWithTargetAndTime(temp.val, temp.endTime - temp.startTime);
+                    if (player)
+                        player.MoveWithTargetAndTime(temp.val, temp.endTime - temp.startTime);
                     horiIndex++;
                 }
             }

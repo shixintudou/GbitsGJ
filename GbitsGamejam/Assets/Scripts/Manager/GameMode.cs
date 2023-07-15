@@ -22,7 +22,11 @@ public class GameMode : MonoBehaviour
     public TimeSectionManager timeSectionManager;
     [HideInInspector]
     public LUIManager m_UIManager;
+
+    [Header("过关数据")]
     bool ifPass;
+    public int playerDeathSection = -1;
+    public bool IfTouchTransport;
     public bool IfPass { get => ifPass; }
 
     [Header("关卡配置")]
@@ -97,10 +101,19 @@ public class GameMode : MonoBehaviour
             {
                 Time.timeScale = 0;
                 if (Player)
+                {
                     Player.rb.velocity = Vector2.zero;
+                }
             }
             else
+            {
                 Time.timeScale = 1;
+                if (Player)
+                {
+                    Player.SetVisible(true);
+                    Player.rb.velocity = Vector2.zero;
+                }
+            }
 
         }
     }
@@ -108,14 +121,14 @@ public class GameMode : MonoBehaviour
     //检查是否通关
     public bool CheckIfPass()
     {
-        bool laganFinished = true;
-        foreach (var lagan in laganRequiredToPass)
-            if (!lagan.bPicked)
-            {
-                laganFinished = false;
-                break;
-            }
-        ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && laganFinished;
+        //bool laganFinished = true;
+        //foreach (var lagan in laganRequiredToPass)
+        //    if (!lagan.bPicked)
+        //    {
+        //        laganFinished = false;
+        //        break;
+        //    }
+        ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && IfTouchTransport;
         if (ifPass)
             OnSuccessPassed();
         return ifPass;
@@ -139,6 +152,16 @@ public class GameMode : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void RespawnPlayer()
+    {
+        if (Player == null)
+        {
+            var player_obj= Instantiate(ResoucesManager.Instance.Resouces["Player"],timeSectionManager.GetCurSectionData().playerPositonOnSectionStart, Quaternion.identity);
+            if (player_obj == null)
+                print("player重生");
+            playerDeathSection = -1;
+        }
+    }
     IEnumerator ReloadLevel()
     {
         yield return 0.3f;

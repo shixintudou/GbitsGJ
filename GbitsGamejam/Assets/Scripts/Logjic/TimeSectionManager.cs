@@ -8,7 +8,6 @@ public class TimeSectionData
     public TimeSectionButton button;
     public bool ifStarted;
     public bool ifEnded;
-    public bool ifBug;
     public Vector3 playerPositonOnSectionStart;
     public Vector3 playerPositonOnSectionEnd;
     public TimeSectionData(TimeSectionButton _button)
@@ -16,7 +15,6 @@ public class TimeSectionData
         button = _button;
         ifStarted = false;
         ifEnded = false;
-        ifBug = false;
     }
 }
 
@@ -88,6 +86,11 @@ public class TimeSectionManager : MonoBehaviour
             }
         }
         print("选择时间段" + number);
+        //是否需要复活玩家
+        if (GameMode.Instance.playerDeathSection >= 0 && number < GameMode.Instance.playerDeathSection)
+        {
+            GameMode.Instance.RespawnPlayer();
+        }
         nowTimeSection = number;
         //选择的时间段已开始过
         if (timeSectionsDataList[number - 1].ifStarted)
@@ -153,7 +156,6 @@ public class TimeSectionManager : MonoBehaviour
                 bug.SetSectionIndex(nowTimeSection);
             }
             timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionStart = player.transform.position;
-            timeSectionsDataList[NowTimeSection - 1].ifBug = true;
             nowBugsNum++;
         }
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
@@ -183,25 +185,30 @@ public class TimeSectionManager : MonoBehaviour
     public void OnClearABug(GameObject bug_obj)
     {
         //结束时间段
-        timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionEnd = bug_obj.transform.position;
-        timeSectionsDataList[NowTimeSection].ifBug = false;//取消掉下一个时间段的漏洞
+        if (nowTimeSection > 0)
+            timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionEnd = bug_obj.transform.position;
         nowBugsNum--;
         EndSection();
         if (!GameMode.Instance.CheckIfPass())
+        {
             GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
+            GameMode.Instance.m_UIManager.ShowTip("当前时间段已结束");
+        }
     }
 
-   public void StartSection()
+    public void StartSection()
     {
         //结束记录
-        timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
+        if (nowTimeSection > 0)
+            timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
         RecordManager.instance.StartRecord(nowTimeSection - 1);
     }
     public void EndSection()
     {
         //结束记录
-        timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
-        RecordManager.instance.endRecord = true ;
+        if (nowTimeSection > 0)
+            timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
+        RecordManager.instance.endRecord = true;
     }
 
     public void RegisterTimeButton(TimeSectionButton button)
@@ -216,7 +223,6 @@ public class TimeSectionManager : MonoBehaviour
     {
         var data = timeSectionsDataList[NowTimeSection];
         data.ifEnded = false;
-        data.ifBug = false;
         nowBugsNum = 0;
     }
 
@@ -232,10 +238,6 @@ public class TimeSectionManager : MonoBehaviour
     /// <returns></returns>
     public int GetNowLogicBugNum()
     {
-        //int res = 0;
-        //foreach (TimeSectionData data in timeSectionsDataList)
-        //    if (data.ifBug)
-        //        res++;
         return nowBugsNum;
     }
 }
