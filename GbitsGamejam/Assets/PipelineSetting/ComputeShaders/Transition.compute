@@ -1,0 +1,66 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Transition
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+float4 _BufferSize;
+float _ShakeIntensity;
+
+
+
+Texture2D _CameraColorTexture;
+Texture2D _NoiseTex;
+RWTexture2D<float4> Result;
+
+float _Amount;
+float _Threshold;
+float _Frequency;
+
+float _RGB_Scale;
+float _BlockSpeed;
+float _BlockAmplitude;
+
+SAMPLER(sampler_linear_clamp);
+
+float randomNoise(float x, float y)
+{
+    return frac(sin(dot(float2(x, y), float2(12.9898, 78.233))) * 43758.5453);
+}
+
+inline float4 Pow4(float4 v, float p)
+{
+    return float4(pow(v.x, p), pow(v.y, p), pow(v.z, p), v.w);
+}
+
+inline float4 Noise(float2 p)
+{
+    return _NoiseTex.SampleLevel(sampler_linear_clamp, p, 0);
+}
+
+[numthreads(8, 8, 1)]
+void Transition(uint3 id : SV_DispatchThreadID)
+{
+    float2 resolution = _BufferSize.xy;
+    float2 invResolution = _BufferSize.zw;
+    float2 uv = (id.xy + 0.5) * invResolution;
+
+    // half strength = 0.5 + 0.5 * randomNoise(_Time.y * uv.x * 11.4, _Time.x * uv.y * 51.4);
+    half strength = 0.5 + 0.5 * cos(_Time.y * _Frequency);
+    float jitter = randomNoise(uv.y, _Time.x) * 2 - 1;
+
+    jitter *= step(_Threshold, abs(jitter)) * _Amount * strength;
+    
+    float4 splitAmount = Pow4(Noise(float2(_BlockSpeed * _Time.y, 2.0 * _BlockSpeed * _Time.y / 25.0)), 8.0) * float4(_BlockAmplitude, _BlockAmplitude, _BlockAmplitude, 1.0);
+    splitAmount = lerp(0.0, splitAmount, _RGB_Scale);
+    float4 sceneColor = _CameraColorTexture.SampleLevel(sampler_linear_clamp, frac(uv + float2(jitter, 0)), 0);
+    uv = frac(uv + float2(jitter, 0));
+
+    float colorR = _CameraColorTexture.SampleLevel(sampler_linear_clamp, (uv + float2(splitAmount.x, -splitAmount.y)), 0).r;
+    float colorG = _CameraColorTexture.SampleLevel(sampler_linear_clamp, (uv + float2(splitAmount.y, -splitAmount.z)), 0).g;
+    float colorB = _CameraColorTexture.SampleLevel(sampler_linear_clamp, (uv + float2(splitAmount.z, -splitAmount.x)), 0).b;
+
+    sceneColor.rgb = float3(colorR, colorG, colorB);
+    Result[id.xy] = sceneColor;
+}

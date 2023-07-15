@@ -5,17 +5,19 @@ using Unity.Mathematics;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class ShakeRenderPass : ScriptableRenderPass
+public class TransitionRenderPass : ScriptableRenderPass
 {
-    private ShakeRendererFeature.ShakeSettings settings;
-    private RenderTexture ShakeRT;
+    private TransitionRendererFeature.TransitionSettings settings;
+    private RenderTexture TransitionRT;
     private ComputeShader computeShader;
+    private Texture2D noiseTex;
     public static int originID;
     public static int targetID;
-    public ShakeRenderPass(ShakeRendererFeature.ShakeSettings settings)
+    public TransitionRenderPass(TransitionRendererFeature.TransitionSettings settings)
     {
         this.settings = settings;
         this.computeShader = settings.computeShader;
+        this.noiseTex = settings.noiseTex;
         this.renderPassEvent = RenderPassEvent.AfterRendering;
     }
 
@@ -49,9 +51,18 @@ public class ShakeRenderPass : ScriptableRenderPass
             cmd.GetTemporaryRT(originID, descriptor1);
             cmd.GetTemporaryRT(targetID, descriptor2);
 
-            cmd.SetComputeFloatParam(settings.computeShader, "_ShakeIntensity", settings.shakeIntensity);
+            float amount = 0.005f + Mathf.Pow(settings.jitterIndensity, 3) * 0.1f;
+            float threshold = Mathf.Clamp01(1.0f - settings.jitterIndensity * 1.2f);
+
+            cmd.SetComputeFloatParam(settings.computeShader, "_Amount", amount);
+            cmd.SetComputeFloatParam(settings.computeShader, "_Threshold", threshold);
+            cmd.SetComputeFloatParam(settings.computeShader, "_RGB_Scale", settings.rgbScale);
+            cmd.SetComputeFloatParam(settings.computeShader, "_BlockSpeed", settings.blockSpeed);
+            cmd.SetComputeFloatParam(settings.computeShader, "_BlockAmplitude", settings.blockAmplitude);
+            cmd.SetComputeFloatParam(settings.computeShader, "_Frequency", UnityEngine.Random.Range(0, settings.frequency));
             cmd.SetComputeVectorParam(settings.computeShader, "_BufferSize", new float4(width, height, 1.0f / width, 1.0f / height));
             cmd.SetComputeTextureParam(settings.computeShader, 0, "_MainTex", originID);
+            cmd.SetComputeTextureParam(settings.computeShader, 0, "_NoiseTex", noiseTex);
             cmd.SetComputeTextureParam(settings.computeShader, 0, "Result", targetID);
 
             cmd.DispatchCompute(settings.computeShader, 0, width / 8, height / 8, 1);

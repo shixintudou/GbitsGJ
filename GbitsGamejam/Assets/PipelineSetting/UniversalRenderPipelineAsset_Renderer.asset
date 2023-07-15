@@ -10,11 +10,52 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87d405fa3b3ed0a48aed391fb08e3dd6, type: 3}
-  m_Name: NewColorInvertRendererFeature
+  m_Name: ColorInvert
   m_EditorClassIdentifier: 
   m_Active: 0
   settings:
     computeShader: {fileID: 7200000, guid: 411af4a6485d97344b19998dbc302b63, type: 3}
+--- !u!114 &-6147390373251644286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78917d711a5f7844586328de3ba366b6, type: 3}
+  m_Name: NewTransitionRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    computeShader: {fileID: 7200000, guid: b299fdfcc2e59014fae8208a127e04e2, type: 3}
+    frequency: 6.5
+    jitterIndensity: 0.66
+    rgbScale: 0.854
+    blockSpeed: 0.481
+    blockAmplitude: 0.095
+    noiseTex: {fileID: 2800000, guid: 5876b3d37d9adec4da3282c434f8ebf4, type: 3}
+--- !u!114 &-4655093591777948665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bbf070f26d3157468bb88b3c4c6b823, type: 3}
+  m_Name: NewOldTVRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    computeShader: {fileID: 7200000, guid: 8a68e9779969b614f86531f784bcdd46, type: 3}
+    OldTVIntensity: 1
+    smoothness: 1
+    roundness: 1
+    noiseSpeed: 0.9
+    noiseFading: 0.8
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30,7 +71,9 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 9116383117023523136}
   - {fileID: -7458570192170730315}
-  m_RendererFeatureMap: 40318eee24e6837eb5bc586bedd57d98
+  - {fileID: -4655093591777948665}
+  - {fileID: -6147390373251644286}
+  m_RendererFeatureMap: 40318eee24e6837eb5bc586bedd57d9807cce0c10ac965bf8204ae9a0615b0aa
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
