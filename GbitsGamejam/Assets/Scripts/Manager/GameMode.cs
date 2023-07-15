@@ -19,18 +19,24 @@ public class GameMode : MonoBehaviour
         }
     }
 
-
-    TimeSectionManager timeSectionManager;
+    [HideInInspector]
+    public TimeSectionManager timeSectionManager;
 
     [Header("关卡配置")]
     public int TimeSectionNum;
+    public Transform DefaultBornTrans;
     //0为自由状态 1-N分别为选中了第N段可分配时间段
 
 
     private static GamePlayMode gamePlayMode;
     public static GamePlayMode GamePlayMode { get => gamePlayMode; }
 
-    Dictionary<SwitchToPass, bool> KeysRequiredToPass;
+    public PlayerHJ Player
+    {
+        get => GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>(); 
+    }
+
+    Dictionary<SwitchToPass, bool> KeysRequiredToPass=new Dictionary<SwitchToPass, bool>();
 
     void Start()
     {
@@ -44,7 +50,7 @@ public class GameMode : MonoBehaviour
        var keys= (SwitchToPass[])FindObjectsOfType(typeof(SwitchToPass));
         foreach (var key in keys)
             KeysRequiredToPass.Add(key, false);
-        //获取场景中0时间轴组件
+        //获取场景中时间轴组件
         timeSectionManager=FindObjectOfType<TimeSectionManager>();
         if (timeSectionManager == null)
             print("场景中缺少TimeSectionManager!");
@@ -79,5 +85,10 @@ public class GameMode : MonoBehaviour
     {
         foreach (var key in KeysRequiredToPass)
             KeysRequiredToPass[key.Key] = false;
+    }
+
+    public void OnPlayerTouchSectionBug(int bugSectionBelongTo)
+    {
+
     }
 }

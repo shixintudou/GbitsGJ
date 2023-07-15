@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 1100524163858759150}
   - component: {fileID: 1100524163858759137}
   - component: {fileID: 1100524163858759136}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 7
-  jumpforce: 10
-  jumpCompensate: 4
-  maxJumpTimes: 2
+  jumpforce: 15
+  jumpCompensate: 0
+  maxJumpTimes: 1
   pickRange: 1.5
