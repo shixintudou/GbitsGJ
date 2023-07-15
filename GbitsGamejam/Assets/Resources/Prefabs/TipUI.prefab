@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 8492471789899550058}
   - component: {fileID: 8492471789899550059}
   - component: {fileID: 8492471789899550052}
+  - component: {fileID: 1677129697700923066}
   m_Layer: 5
   m_Name: TipUI
   m_TagString: Untagged
@@ -254,3 +255,16 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1677129697700923066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8492471789899550053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d477f6ddc6cddfd44b1f4f2287f11412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LifeSpan: 1

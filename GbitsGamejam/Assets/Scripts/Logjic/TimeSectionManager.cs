@@ -31,6 +31,9 @@ public class TimeSectionManager : MonoBehaviour
     private int nowTimeSection;
     public int NowTimeSection { get => Mathf.Clamp(nowTimeSection, 0, GameMode.Instance.TimeSectionNum); }
 
+    private int nowBugsNum;
+    public int NowBugsNum { get => nowBugsNum; }
+
     bool isSelectingPosition;
 
     void Start()
@@ -49,12 +52,12 @@ public class TimeSectionManager : MonoBehaviour
             {
                 //判定位置是否有效
                 Vector3 clickPos = Input.mousePosition;
-                if (CheckIfPosSelectValid(clickPos))
+                if (CheckIfPosSelectValid(Input.mousePosition))
                 {
                     PlayerHJ player = GameMode.Instance.Player;
                     if (player)
                     {
-                        player.transform.position = Camera.main.ScreenToWorldPoint(clickPos);
+                        player.transform.position = (Vector3)(Vector2)Camera.main.ScreenToWorldPoint(clickPos);
                         timeSectionsDataList[nowTimeSection - 1].playerPositonOnSectionStart = player.transform.position;
                         FinishedChoosingNewBornPosition();
                     }
@@ -85,8 +88,14 @@ public class TimeSectionManager : MonoBehaviour
             }
         }
         print("选择时间段" + number);
+        //选择的时间段已开始过
+        if (timeSectionsDataList[number - 1].ifStarted)
+        {
+            GameMode.Instance.m_UIManager.ShowTip("该时间段已结束!");
+            return;
+        }
         //选择的时间段未开始过
-        if (!timeSectionsDataList[number - 1].ifStarted)
+        else {
             if (number == 1)
             {
                 //玩家转移到默认出生点
@@ -100,21 +109,26 @@ public class TimeSectionManager : MonoBehaviour
                 //前一时间段尚未结束，玩家需指定新的位置
                 if (!timeSectionsDataList[number - 1 - 1].ifEnded)
                     StartedChoosingNewBornPosition();
+                //玩家转移到上一时间段结束位置
                 else
                 {
-                    GameMode.Instance.SetPlayerPos(timeSectionsDataList[number -1- 1].playerPositonOnSectionEnd);
+                    GameMode.Instance.SetPlayerPos(timeSectionsDataList[number - 1 - 1].playerPositonOnSectionEnd);
                     GameMode.Instance.SetGameMode(GamePlayMode.Play);
                 }
             }
-        else 
-        {
-            GameMode.Instance.SetPlayerPos(timeSectionsDataList[number - 1].playerPositonOnSectionEnd);
-            GameMode.Instance.SetGameMode(GamePlayMode.Play);
         }
+        ////选择的时间段已开始过，玩家转移到该时间段结束位置
+        //else
+        //{
+        //    GameMode.Instance.SetPlayerPos(timeSectionsDataList[number - 1].playerPositonOnSectionEnd);
+        //    GameMode.Instance.SetGameMode(GamePlayMode.Play);
+        //}
         nowTimeSection = number;
     }
-    bool CheckIfPosSelectValid(Vector3 pos)
+    bool CheckIfPosSelectValid(Vector2 screenPos)
     {
+        if (Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(screenPos), 0.5f))
+            return false;
         return true;
     }
     void StartedChoosingNewBornPosition()
@@ -139,6 +153,7 @@ public class TimeSectionManager : MonoBehaviour
             }
             timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionStart = player.transform.position;
             timeSectionsDataList[NowTimeSection - 1].ifBug = true;
+            nowBugsNum++;
         }
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
         timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
@@ -167,7 +182,8 @@ public class TimeSectionManager : MonoBehaviour
     {
         //结束时间段
         timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionEnd = bug_obj.transform.position;
-        timeSectionsDataList[NowTimeSection - 1].ifBug = false;
+        timeSectionsDataList[NowTimeSection].ifBug = false;//取消掉下一个时间段的漏洞
+        nowBugsNum--;
         timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
         if (!GameMode.Instance.CheckIfPass())
             GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
@@ -186,12 +202,12 @@ public class TimeSectionManager : MonoBehaviour
         var data = timeSectionsDataList[NowTimeSection];
         data.ifEnded = false;
         data.ifBug = false;
-
+        nowBugsNum = 0;
     }
 
     public TimeSectionData GetCurSectionData()
     {
-        if(nowTimeSection == 0)
+        if (nowTimeSection == 0)
             return null;
         return TimeSectionsDataList[NowTimeSection - 1];
     }
@@ -201,10 +217,10 @@ public class TimeSectionManager : MonoBehaviour
     /// <returns></returns>
     public int GetNowLogicBugNum()
     {
-        int res = 0;
-        foreach (TimeSectionData data in timeSectionsDataList)
-            if (data.ifBug)
-                res++;
-        return res;
+        //int res = 0;
+        //foreach (TimeSectionData data in timeSectionsDataList)
+        //    if (data.ifBug)
+        //        res++;
+        return nowBugsNum;
     }
 }

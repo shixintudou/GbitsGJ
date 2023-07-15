@@ -17,7 +17,7 @@ public class LUIManager : MonoBehaviour
 
     public void CanvasFadeInAndOut()
     {
-
+        Instantiate(ResoucesManager.Instance.Resouces["FadeCanvas"]);
     }
 }
 
