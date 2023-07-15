@@ -12,6 +12,7 @@ public class RecordManager : MonoBehaviour
             instance = this;
         else if (instance != this)
             Destroy(this);
+        DontDestroyOnLoad(this);
     }
     // Start is called before the first frame update
     void Start()
