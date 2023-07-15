@@ -112,7 +112,6 @@ public class GameMode : MonoBehaviour
                 laganFinished = false;
                 break;
             }
-        print(timeSectionManager.GetNowLogicBugNum() + " h" + laganFinished);
         bool ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && laganFinished;
         if (ifPass)
             OnSuccessPassed();

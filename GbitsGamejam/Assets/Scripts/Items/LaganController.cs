@@ -19,6 +19,7 @@ public class LaganController : BasePick
     }
     public override void BePicked()
     {
+        bPicked = true;
         animator.SetBool("Picked", true);
         if (controlledFlat != null)
             controlledFlat.FlatEnable();
