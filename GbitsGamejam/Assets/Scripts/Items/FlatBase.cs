@@ -5,6 +5,8 @@ using UnityEngine;
 public class FlatBase : MonoBehaviour
 {
     public float speed;
+    public Vector2 targetPosition;
+    public Vector2 startPostion;
     // Start is called before the first frame update
     void Start()
     {
