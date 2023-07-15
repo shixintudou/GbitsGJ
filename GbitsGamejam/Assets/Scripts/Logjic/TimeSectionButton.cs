@@ -38,9 +38,18 @@ public class TimeSectionButton : MonoBehaviour
     {
 
     }
+    void OnSelected()
+    {
+    }
+
+    void OnUnselected()
+    {
+
+    }
 
     void OnButtonClick()
     {
+        //index´Ó1-N
         timeSectionManager.TrySelectTimeSectionIndex(index);
     }
 }

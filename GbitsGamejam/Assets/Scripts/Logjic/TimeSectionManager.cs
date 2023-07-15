@@ -10,6 +10,7 @@ public class TimeSectionData
     public bool ifEnded;
     public bool ifBug;
     public Vector3 playerPositonOnSectionStart;
+    public Vector3 playerPositonOnSectionEnd;
     public TimeSectionData(TimeSectionButton _button)
     {
         button = _button;
@@ -23,7 +24,8 @@ public class TimeSectionManager : MonoBehaviour
 {
     public GameObject DarkCanvas;
 
-    List<TimeSectionData> timeSectionsData = new List<TimeSectionData>();
+    List<TimeSectionData> timeSectionsDataList = new List<TimeSectionData>();
+    public List<TimeSectionData> TimeSectionsDataList { get => timeSectionsDataList; }
 
     //当前时间段
     private int nowTimeSection;
@@ -51,84 +53,145 @@ public class TimeSectionManager : MonoBehaviour
                 {
                     PlayerHJ player = GameMode.Instance.Player;
                     if (player)
+                    {
                         player.transform.position = Camera.main.ScreenToWorldPoint(clickPos);
-                    FinishedNewBornPosition();
+                        timeSectionsDataList[nowTimeSection - 1].playerPositonOnSectionStart = player.transform.position;
+                        FinishedChoosingNewBornPosition();
+                    }
                 }
             }
         }
     }
-    public void TrySelectTimeSectionIndex(int index)
+    /// <summary>
+    /// 选择时间段按钮，切换时间
+    /// </summary>
+    /// <param name="number"></param>从1-N
+    public void TrySelectTimeSectionIndex(int number)
     {
-        if (index < 0 || index > GameMode.Instance.TimeSectionNum) return;
-        if (index == 0)
+        if (number <= 0 || number > GameMode.Instance.TimeSectionNum) return;
+
+        if (NowTimeSection > 0)
         {
-            //玩家转移到默认出生点
-            PlayerHJ player = GameMode.Instance.Player;
-            if (player)
-                player.transform.position = GameMode.Instance.DefaultBornTrans.position;
-        }
-        else
-        {
-            //前一时间段尚未结束，玩家需指定新的位置
-            if (!timeSectionsData[index - 1].ifEnded)
+            TimeSectionData nowSectionData = timeSectionsDataList[NowTimeSection - 1];
+            if (nowSectionData.ifStarted && !nowSectionData.ifEnded && NowTimeSection != 0)
             {
-                StartedNewBornPosition();
+                GameMode.Instance.m_UIManager.ShowTip("请先结束当前时间段!");
+                return;
             }
         }
-        nowTimeSection = index;
+        print("选择时间段" + number);
+        //选择的时间段未开始过
+        if (!timeSectionsDataList[number - 1].ifStarted)
+            if (number == 1)
+            {
+                //玩家转移到默认出生点
+                GameMode.Instance.SetPlayerPos(GameMode.Instance.DefaultBornTrans.position);
+                timeSectionsDataList[0].ifStarted = true;
+                timeSectionsDataList[0].playerPositonOnSectionStart = GameMode.Instance.DefaultBornTrans.position;
+                GameMode.Instance.SetGameMode(GamePlayMode.Play);
+            }
+            else
+            {
+                //前一时间段尚未结束，玩家需指定新的位置
+                if (!timeSectionsDataList[number - 1 - 1].ifEnded)
+                    StartedChoosingNewBornPosition();
+                else
+                {
+                    GameMode.Instance.SetPlayerPos(timeSectionsDataList[number -1- 1].playerPositonOnSectionEnd);
+                    GameMode.Instance.SetGameMode(GamePlayMode.Play);
+                }
+            }
+        else 
+        {
+            GameMode.Instance.SetPlayerPos(timeSectionsDataList[number - 1].playerPositonOnSectionEnd);
+            GameMode.Instance.SetGameMode(GamePlayMode.Play);
+        }
+        nowTimeSection = number;
     }
     bool CheckIfPosSelectValid(Vector3 pos)
     {
         return true;
     }
-    void StartedNewBornPosition()
+    void StartedChoosingNewBornPosition()
     {
         isSelectingPosition = true;
         DarkCanvas.SetActive(true);
         GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
     }
-    void FinishedNewBornPosition()
+    void FinishedChoosingNewBornPosition()
     {
         isSelectingPosition = false;
         DarkCanvas.SetActive(false);
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
+        timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
     }
 
     //玩家点击对应按钮手动结束当前时间段
     public void FinishThisTimeSection()
     {
         //判定是否可以结束
-        if (true&& !timeSectionsData[NowTimeSection].ifEnded)
+        if (true && NowTimeSection > 0 && !timeSectionsDataList[NowTimeSection - 1].ifEnded)
         {
             PlayerHJ player = GameMode.Instance.Player;
             if (player)
             {
-                Instantiate(ResoucesManager.Instance.Resouces["LogicBug"],player.transform.position,Quaternion.identity);
-                timeSectionsData[NowTimeSection].ifEnded = true;
+                //生成逻辑漏洞
+               var Bug_obj= Instantiate(ResoucesManager.Instance.Resouces["LogicBug"], player.transform.position, Quaternion.identity);
+                LogicBug bug=Bug_obj.GetComponent<LogicBug>();
+                if (bug)
+                {
+                    bug.SetSectionIndex(nowTimeSection);
+                }
+                timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionEnd = player.transform.position;
+                timeSectionsDataList[NowTimeSection - 1].ifBug = true;
+                timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
                 GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
             }
         }
+        else if (NowTimeSection == 0)
+        {
+            GameMode.Instance.m_UIManager.ShowTip("请先选择一段时间段！");
+        }
+    }
+    public void OnClearABug(GameObject bug_obj)
+    {
+        timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionEnd = bug_obj.transform.position;
+        timeSectionsDataList[NowTimeSection - 1].ifBug = false;
+        timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
+        if (!GameMode.Instance.CheckIfPass())
+            GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
     }
 
     public void RegisterTimeButton(TimeSectionButton button)
     {
         if (button)
         {
-            timeSectionsData.Add(new TimeSectionData(button));
+            timeSectionsDataList.Add(new TimeSectionData(button));
         }
     }
 
     public void ResetThisSection()
     {
-        var data = timeSectionsData[NowTimeSection];
+        var data = timeSectionsDataList[NowTimeSection];
         data.ifEnded = false;
         data.ifBug = false;
-        
+
     }
+
+    public TimeSectionData GetCurSectionData()
+    {
+        if(nowTimeSection == 0)
+            return null;
+        return TimeSectionsDataList[NowTimeSection - 1];
+    }
+    /// <summary>
+    /// 返回当前的漏洞数量
+    /// </summary>
+    /// <returns></returns>
     public int GetNowLogicBugNum()
     {
         int res = 0;
-        foreach (TimeSectionData data in timeSectionsData)
+        foreach (TimeSectionData data in timeSectionsDataList)
             if (data.ifBug)
                 res++;
         return res;
