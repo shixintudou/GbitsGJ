@@ -24,7 +24,8 @@ public class PlayerHJ : MonoBehaviour
     //State state = State.Move;
 
     Transform footTrans;
-    Rigidbody2D rb;
+    [HideInInspector]
+    public Rigidbody2D rb;
     Coroutine moveCoroutine;
 
     // Start is called before the first frame update

@@ -22,7 +22,7 @@ public class ResoucesManager:Object
             Resouces.Add(array.name, array as GameObject);
         foreach (var item in Resouces)
         {
-            Debug.Log(item.Key);
+            Debug.Log("º”‘ÿ‘§÷∆ÃÂ"+item.Key);
         }
     }
 }
