@@ -109,8 +109,9 @@ public class PlayerHJ : MonoBehaviour
                 BasePick pick = pickCol.GetComponent<BasePick>();
                 if (pick && pick.CheckCondition())
                 {
-
-                    Dialog.instance.BeginShowDialog(pick.transform, pick.description, pick.OnDialogOver);
+                    pick.BePicked();
+                    if (Dialog.instance != null)
+                        Dialog.instance.BeginShowDialog(pick.transform, pick.description, pick.OnDialogOver);
                 }
             }
         }
@@ -119,7 +120,7 @@ public class PlayerHJ : MonoBehaviour
     {
         print("dead");
     }
-    bool CheckIsOnGround()
+    public bool CheckIsOnGround()
     {
         var bisOnGround = Physics2D.OverlapCircle(footTrans.position, 0.2f, LayerMask.GetMask("Ground"));
         return bisOnGround;
