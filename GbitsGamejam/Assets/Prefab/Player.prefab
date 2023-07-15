@@ -171,6 +171,7 @@ MonoBehaviour:
   jumpforce: 14
   jumpCompensate: 0
   maxJumpTimes: 1
+  deadSprite: {fileID: 21300000, guid: 905cd68a75d9b604da3ac7b2fd3b24c3, type: 3}
   pickRange: 1.5
   rb: {fileID: 0}
 --- !u!95 &926743631511717378

@@ -16,14 +16,15 @@ public class Thrust : MonoBehaviour
     {
         
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
 #nullable enable
-        PlayerHJ? player = collision.GetComponent<PlayerHJ>();
+        PlayerHJ? player = collision.gameObject.GetComponent<PlayerHJ>();
 #nullable disable
-        if(player != null)
+        if (player != null)
         {
             player.Dead();
         }
     }
+    
 }
