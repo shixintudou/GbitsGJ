@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+[Serializable]
 public struct HorizontalTimeData
 {
     public float val;
@@ -10,6 +11,7 @@ public struct HorizontalTimeData
     public float endTime;
 }
 
+[Serializable]
 public struct PlayData
 {
     public List<HorizontalTimeData> horizonData;

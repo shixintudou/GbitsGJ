@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 7
-  jumpforce: 15
+  jumpforce: 10
   jumpCompensate: 0
   maxJumpTimes: 1
   pickRange: 1.5
