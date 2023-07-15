@@ -37,7 +37,7 @@ public class GameMode : MonoBehaviour
         get => GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>();
     }
 
-    Dictionary<SwitchToPass, bool> KeysRequiredToPass = new Dictionary<SwitchToPass, bool>();
+    List<LaganController> laganRequiredToPass = new List<LaganController>();
 
     private void Awake()
     {
@@ -59,10 +59,10 @@ public class GameMode : MonoBehaviour
             Destroy(instance);
             instance = this;
         }
-        //获取场景中过关所需的开关，注册状态
-        var keys = FindObjectsOfType<SwitchToPass>();
+        //获取场景中过关所需的拉杆，注册状态
+        var keys = FindObjectsOfType<LaganController>();
         foreach (var key in keys)
-            KeysRequiredToPass.Add(key, false);
+            laganRequiredToPass.Add(key);
 
         //获取场景中时间轴组件
         timeSectionManager = FindObjectOfType<TimeSectionManager>();
@@ -81,7 +81,7 @@ public class GameMode : MonoBehaviour
             ResetLevel();
             return;
         }
-        if(Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return))
             timeSectionManager.FinishThisTimeSection();
     }
 
@@ -105,17 +105,30 @@ public class GameMode : MonoBehaviour
     //检查是否通关
     public bool CheckIfPass()
     {
-        bool keysFinished = false;
-        foreach (var key in KeysRequiredToPass)
-            if (!key.Value)
+        bool laganFinished = true;
+        foreach (var lagan in laganRequiredToPass)
+            if (!lagan.bPicked)
             {
-                keysFinished = false;
+                laganFinished = false;
                 break;
             }
-        bool ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && keysFinished;
+        print(timeSectionManager.GetNowLogicBugNum() + " h" + laganFinished);
+        bool ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && laganFinished;
         if (ifPass)
-            print("过关成功！");
+            OnSuccessPassed();
         return ifPass;
+    }
+    void OnSuccessPassed()
+    {
+        print("过关成功！");
+        SetGameMode(GamePlayMode.Replay);
+        m_UIManager.CanvasFadeInAndOut();
+        StartCoroutine(ReplayCoroutine());
+    }
+    IEnumerator ReplayCoroutine()
+    {
+        yield return 0.3f;
+        ReplayManager.instance.StartReplay(DefaultBornTrans.position);
     }
 
     //重载关卡
@@ -148,5 +161,9 @@ public class GameMode : MonoBehaviour
         PlayerHJ player = GameMode.Instance.Player;
         if (player)
             player.transform.position = postion;
+    }
+
+    public void SwitchCursorImage(bool IfHandmode)
+    {
     }
 }

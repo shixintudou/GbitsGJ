@@ -20,7 +20,10 @@ public class LaganController : BasePick
     public override void BePicked()
     {
         animator.SetBool("Picked", true);
-        controlledFlat.FlatEnable();
+        if (controlledFlat != null)
+            controlledFlat.FlatEnable();
+        //¼ì²âÊÇ·ñ¹ý¹Ø
+        GameMode.Instance.CheckIfPass();
         StartCoroutine(MoveEndCoroutine());
     }
     IEnumerator MoveEndCoroutine()
