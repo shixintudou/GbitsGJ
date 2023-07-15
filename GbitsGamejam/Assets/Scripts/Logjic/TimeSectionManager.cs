@@ -73,6 +73,11 @@ public class TimeSectionManager : MonoBehaviour
         if (NowTimeSection > 0)
         {
             TimeSectionData nowSectionData = timeSectionsDataList[NowTimeSection - 1];
+            if (number == NowTimeSection)
+            {
+                GameMode.Instance.m_UIManager.ShowTip("已处于该时间段!");
+                return;
+            }
             if (nowSectionData.ifStarted && !nowSectionData.ifEnded && NowTimeSection != 0)
             {
                 GameMode.Instance.m_UIManager.ShowTip("请先结束当前时间段!");
@@ -160,6 +165,7 @@ public class TimeSectionManager : MonoBehaviour
     }
     public void OnClearABug(GameObject bug_obj)
     {
+        //结束时间段
         timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionEnd = bug_obj.transform.position;
         timeSectionsDataList[NowTimeSection - 1].ifBug = false;
         timeSectionsDataList[NowTimeSection - 1].ifEnded = true;

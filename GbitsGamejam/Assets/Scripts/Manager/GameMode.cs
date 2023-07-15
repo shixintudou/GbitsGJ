@@ -124,6 +124,11 @@ public class GameMode : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    IEnumerator ReloadLevel()
+    {
+        yield return 0.3f;
+
+    }
     /// <summary>
     /// 当玩家接触到逻辑漏洞
     /// </summary>
