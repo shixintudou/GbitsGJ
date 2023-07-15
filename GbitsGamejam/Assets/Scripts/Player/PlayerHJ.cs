@@ -27,6 +27,7 @@ public class PlayerHJ : MonoBehaviour
     [HideInInspector]
     public Rigidbody2D rb;
     Coroutine moveCoroutine;
+    bool dead = false;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +40,8 @@ public class PlayerHJ : MonoBehaviour
     }
     void Update()
     {
+        if (dead)
+            return;
         if (GameMode.GamePlayMode == GamePlayMode.Play)
         {
             ControlMoveMentUpdate();
@@ -123,6 +126,7 @@ public class PlayerHJ : MonoBehaviour
     public void Dead()
     {
         print("dead");
+        dead = true;        
     }
     public bool CheckIsOnGround()
     {
