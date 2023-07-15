@@ -1689,7 +1689,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DarkCanvas: {fileID: 174757665}
-  BugPrefab: {fileID: 0}
 --- !u!1 &1277136018
 GameObject:
   m_ObjectHideFlags: 0

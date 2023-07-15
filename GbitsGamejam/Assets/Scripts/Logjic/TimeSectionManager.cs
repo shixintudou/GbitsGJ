@@ -21,7 +21,6 @@ public class TimeSectionData
 public class TimeSectionManager : MonoBehaviour
 {
     public GameObject DarkCanvas;
-    public GameObject BugPrefab;
 
     List<TimeSectionData> timeSectionsData = new List<TimeSectionData>();
 
@@ -97,12 +96,12 @@ public class TimeSectionManager : MonoBehaviour
     public void FinishThisTimeSection()
     {
         //判定是否可以结束
-        if (true)
+        if (true&& !timeSectionsData[NowTimeSection].ifEnded)
         {
             PlayerHJ player = GameMode.Instance.Player;
             if (player)
             {
-                Instantiate(BugPrefab, player.gameObject.transform);
+                Instantiate(ResoucesManager.Instance.Resouces["LogicBug"],player.transform.position,Quaternion.identity);
                 timeSectionsData[NowTimeSection].ifEnded = true;
             }
         }
