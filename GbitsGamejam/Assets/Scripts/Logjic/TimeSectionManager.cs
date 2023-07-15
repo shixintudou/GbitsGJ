@@ -95,13 +95,14 @@ public class TimeSectionManager : MonoBehaviour
             return;
         }
         //选择的时间段未开始过
-        else {
+        else
+        {
             if (number == 1)
             {
                 //玩家转移到默认出生点
                 GameMode.Instance.SetPlayerPos(GameMode.Instance.DefaultBornTrans.position);
-                timeSectionsDataList[0].ifStarted = true;
                 timeSectionsDataList[0].playerPositonOnSectionStart = GameMode.Instance.DefaultBornTrans.position;
+                StartSection();
                 GameMode.Instance.SetGameMode(GamePlayMode.Play);
             }
             else
@@ -156,7 +157,10 @@ public class TimeSectionManager : MonoBehaviour
             nowBugsNum++;
         }
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
-        timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
+        StartSection();
+
+        //开始记录
+        RecordManager.instance.StartRecord(NowTimeSection - 1);
     }
 
     //玩家点击对应按钮手动结束当前时间段
@@ -169,7 +173,7 @@ public class TimeSectionManager : MonoBehaviour
             if (player)
             {
                 timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionEnd = player.transform.position;
-                timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
+                EndSection();
                 GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
             }
         }
@@ -184,9 +188,22 @@ public class TimeSectionManager : MonoBehaviour
         timeSectionsDataList[NowTimeSection - 1].playerPositonOnSectionEnd = bug_obj.transform.position;
         timeSectionsDataList[NowTimeSection].ifBug = false;//取消掉下一个时间段的漏洞
         nowBugsNum--;
-        timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
+        EndSection();
         if (!GameMode.Instance.CheckIfPass())
             GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
+    }
+
+    void StartSection()
+    {
+        //结束记录
+        timeSectionsDataList[NowTimeSection - 1].ifStarted = true;
+        RecordManager.instance.StartRecord(NowTimeSection-1);
+    }
+    void EndSection()
+    {
+        //结束记录
+        timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
+        RecordManager.instance.endRecord = true ;
     }
 
     public void RegisterTimeButton(TimeSectionButton button)
