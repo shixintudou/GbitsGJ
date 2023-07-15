@@ -94,8 +94,8 @@ public class ReplayManager : MonoBehaviour
                     horiIndex++;
                 }
             }
-            t += Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
+            t += Time.deltaTime;
+            yield return null;
         }
     }
 }

@@ -276,8 +276,12 @@ PrefabInstance:
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1351821525254032308, guid: 9b3f24e400b45be439ae852d41b48dc9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1351821525254032308, guid: 9b3f24e400b45be439ae852d41b48dc9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.29
+      value: 9.89
       objectReference: {fileID: 0}
     - target: {fileID: 1351821525254032308, guid: 9b3f24e400b45be439ae852d41b48dc9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1062,6 +1066,7 @@ MonoBehaviour:
   startRecord: 0
   time: 0
   jumpTimes: []
+  lagan: {fileID: 0}
 --- !u!4 &1506684075
 Transform:
   m_ObjectHideFlags: 0
@@ -1576,6 +1581,7 @@ MonoBehaviour:
   startRecord: 0
   time: 0
   jumpTimes: []
+  lagan: {fileID: 0}
 --- !u!4 &1796335786
 Transform:
   m_ObjectHideFlags: 0

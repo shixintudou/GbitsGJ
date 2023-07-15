@@ -42,15 +42,13 @@ public class PlayerHJ : MonoBehaviour
         if (GameMode.GamePlayMode == GamePlayMode.Play)
         {
             ControlMoveMentUpdate();
+            ControlMoveMentFixupdate();
             Pick();
         }
     }
     private void FixedUpdate()
     {
-        if (GameMode.GamePlayMode == GamePlayMode.Play)
-        {
-            ControlMoveMentFixupdate();
-        }
+        
     }
     public void ControlMoveMentUpdate()
     {
@@ -138,8 +136,8 @@ public class PlayerHJ : MonoBehaviour
         while(t<time)
         {
             rb.velocity = new Vector2(target * moveSpeed, rb.velocity.y);
-            t += Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
+            t += Time.deltaTime;
+            yield return null;
         }
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
