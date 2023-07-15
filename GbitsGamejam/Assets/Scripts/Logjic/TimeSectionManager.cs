@@ -88,6 +88,7 @@ public class TimeSectionManager : MonoBehaviour
             }
         }
         print("选择时间段" + number);
+        nowTimeSection = number;
         //选择的时间段已开始过
         if (timeSectionsDataList[number - 1].ifStarted)
         {
@@ -124,7 +125,6 @@ public class TimeSectionManager : MonoBehaviour
         //    GameMode.Instance.SetPlayerPos(timeSectionsDataList[number - 1].playerPositonOnSectionEnd);
         //    GameMode.Instance.SetGameMode(GamePlayMode.Play);
         //}
-        nowTimeSection = number;
     }
     bool CheckIfPosSelectValid(Vector2 screenPos)
     {
@@ -159,8 +159,6 @@ public class TimeSectionManager : MonoBehaviour
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
         StartSection();
 
-        //开始记录
-        RecordManager.instance.StartRecord(NowTimeSection - 1);
     }
 
     //玩家点击对应按钮手动结束当前时间段
@@ -196,8 +194,8 @@ public class TimeSectionManager : MonoBehaviour
     void StartSection()
     {
         //结束记录
-        timeSectionsDataList[NowTimeSection - 1].ifStarted = true;
-        RecordManager.instance.StartRecord(NowTimeSection-1);
+        timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
+        RecordManager.instance.StartRecord(nowTimeSection - 1);
     }
     void EndSection()
     {

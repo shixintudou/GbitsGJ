@@ -65,6 +65,10 @@ public class PlayerHJ : MonoBehaviour
     {
         rb.velocity = new Vector2(rb.velocity.x, jumpforce);
         nowJumpTimes++;
+        if(RecordManager.instance.startRecord)
+        {
+            RecordManager.instance.AddJumpTimes();
+        }
     }
 
     public void ControlMoveMentFixupdate()

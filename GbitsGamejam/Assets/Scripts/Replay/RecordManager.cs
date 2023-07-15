@@ -6,6 +6,9 @@ public class RecordManager : MonoBehaviour
 {
     public static RecordManager instance;
     public bool endRecord;
+    public bool startRecord;
+    public float time;
+    public List<float> jumpTimes;
     private void Awake()
     {
         if (instance == null)
@@ -28,13 +31,19 @@ public class RecordManager : MonoBehaviour
     public void StartRecord(int num)
     {
         endRecord = false;
+        startRecord = true;
+        jumpTimes = new List<float>();
         StartCoroutine(RecordCoroutine(num));
     }
     IEnumerator RecordCoroutine(int num)
     {
-        PlayData data = new PlayData();
+        PlayData data = new PlayData()
+        {
+            horizonData = new List<HorizontalTimeData>(),
+            jumpTimes = new List<float>(),
+        };
         float horizontal = 0;
-        float time = 0f;
+        time = 0f;
         HorizontalTimeData horizontalTimeData = new HorizontalTimeData();
         while (!endRecord)
         {
@@ -66,10 +75,11 @@ public class RecordManager : MonoBehaviour
                     horizontalTimeData.val = horizontal;
                 }
             }
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                data.jumpTimes.Add(time);
-            }
+
+            //if (Input.GetKeyDown(KeyCode.Escape))
+            //{
+            //    data.jumpTimes.Add(time);
+            //}
             time+= Time.deltaTime;
             yield return null;
         }
@@ -78,6 +88,12 @@ public class RecordManager : MonoBehaviour
             horizontalTimeData.endTime = time;
             data.horizonData.Add(horizontalTimeData);
         }
+        data.jumpTimes = jumpTimes;
         ReplayManager.instance.datas[num]= data;
+        startRecord = false;
+    }
+    public void AddJumpTimes()
+    {
+        jumpTimes.Add(time);
     }
 }
