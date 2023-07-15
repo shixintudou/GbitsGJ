@@ -28,6 +28,7 @@ public class ReplayManager : MonoBehaviour
             instance = this;
         else if (instance != this)
             Destroy(this);
+        DontDestroyOnLoad(this);
     }
     public void SetDataNum(int num)
     {

@@ -115,7 +115,10 @@ public class PlayerHJ : MonoBehaviour
             }
         }
     }
-
+    public void Dead()
+    {
+        print("dead");
+    }
     bool CheckIsOnGround()
     {
         var bisOnGround = Physics2D.OverlapCircle(footTrans.position, 0.2f, LayerMask.GetMask("Ground"));
