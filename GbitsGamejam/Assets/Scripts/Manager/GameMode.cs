@@ -48,7 +48,8 @@ public class GameMode : MonoBehaviour
 
     public PlayerHJ Player
     {
-        get => GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>();
+        get => 
+           GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>();
     }
 
 
@@ -79,6 +80,7 @@ public class GameMode : MonoBehaviour
         ReplayManager.instance.IsReadyForLoadNextScene = false;
         ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
 
+        print("æ≤Ã¨≥ı ºªØ" + (levelFisrtlyEnter == null));
         if (levelFisrtlyEnter == null)
         {
             levelFisrtlyEnter = new List<bool>();
@@ -247,6 +249,7 @@ public class GameMode : MonoBehaviour
     public bool CheckShowLevelIntroduce()
     {
         int curSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        print(levelFisrtlyEnter[curSceneIndex] + " " + (LevelIntroducer.Instance != null));
         if (!levelFisrtlyEnter[curSceneIndex] && LevelIntroducer.Instance != null)
         {
             levelFisrtlyEnter[curSceneIndex] = true;

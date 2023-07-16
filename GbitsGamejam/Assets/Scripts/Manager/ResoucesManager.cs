@@ -22,7 +22,7 @@ public class ResoucesManager
             Resouces.Add(array.name, array as GameObject);
         foreach (var item in Resouces)
         {
-            Debug.Log("加载预制体"+item.Key);
+           // Debug.Log("加载预制体"+item.Key);
         }
     }
 }
