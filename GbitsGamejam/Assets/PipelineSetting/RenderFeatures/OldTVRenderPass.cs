@@ -48,7 +48,17 @@ public class OldTVRenderPass : ScriptableRenderPass
 
             cmd.GetTemporaryRT(originID, descriptor1);
             cmd.GetTemporaryRT(targetID, descriptor2);
-
+            int kernel;
+            if (settings.oldTVMode == OldTVRendererFeature.OldTVSettings.OldTVMode.Type1)
+            {
+                // OldTV1
+                kernel = settings.computeShader.FindKernel("OldTV");
+            }
+            else
+            {
+                // OldTV2
+                kernel = settings.computeShader.FindKernel("OldTV2");
+            }
 
             cmd.SetComputeFloatParam(settings.computeShader, "_OldTVIntensity", settings.OldTVIntensity);
             cmd.SetComputeFloatParam(settings.computeShader, "_Smoothness", settings.smoothness);
@@ -58,10 +68,10 @@ public class OldTVRenderPass : ScriptableRenderPass
 
 
             cmd.SetComputeVectorParam(settings.computeShader, "_BufferSize", new float4(width, height, 1.0f / width, 1.0f / height));
-            cmd.SetComputeTextureParam(settings.computeShader, 0, "_MainTex", originID);
-            cmd.SetComputeTextureParam(settings.computeShader, 0, "Result", targetID);
+            cmd.SetComputeTextureParam(settings.computeShader, kernel, "_MainTex", originID);
+            cmd.SetComputeTextureParam(settings.computeShader, kernel, "Result", targetID);
 
-            cmd.DispatchCompute(settings.computeShader, 0, width / 8, height / 8, 1);
+            cmd.DispatchCompute(settings.computeShader, kernel, width / 8, height / 8, 1);
 
             cmd.Blit(targetID, renderingData.cameraData.renderer.cameraColorTarget);
 

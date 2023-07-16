@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4840945959635473042}
   - component: {fileID: 6295171962230205320}
   - component: {fileID: 985586729900894084}
+  - component: {fileID: 377552251340467408}
   m_Layer: 0
   m_Name: LogicBug
   m_TagString: Untagged
@@ -73,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0128102c83282d848b9a61e35d0d46c4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 84b2ea721793f524e9ed53e6f455188a, type: 3}
   m_Color: {r: 0.6226415, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -112,3 +113,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6566fcf45e1c742bfc27acf7d55d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &377552251340467408
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4840945959635473043}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a33777320d469b64bb192dc25ec20578, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
