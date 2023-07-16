@@ -35,7 +35,7 @@ MonoBehaviour:
     rgbScale: 0.513
     blockSpeed: 0.481
     blockAmplitude: 0.095
-    jumpProgress: 1.0024045
+    jumpProgress: 0
     noiseTex: {fileID: 2800000, guid: 5876b3d37d9adec4da3282c434f8ebf4, type: 3}
 --- !u!114 &-4655093591777948665
 MonoBehaviour:
@@ -53,11 +53,11 @@ MonoBehaviour:
   settings:
     computeShader: {fileID: 7200000, guid: 8a68e9779969b614f86531f784bcdd46, type: 3}
     oldTVMode: 0
-    OldTVIntensity: 1
-    smoothness: 1
-    roundness: 1
-    noiseSpeed: 0.9
-    noiseFading: 0.8
+    OldTVIntensity: 1.2
+    smoothness: 0.95
+    roundness: 0.95
+    noiseSpeed: 0.5
+    noiseFading: 1
 --- !u!114 &-880165643050157765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 053a8a52ff5afca4e81431611c16f8ff, type: 3}
   m_Name: NewLineRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     computeShader: {fileID: 7200000, guid: 04d3a4156dc6f3b4b8c206b62e4d47db, type: 3}
     lineMode: 0
