@@ -19,5 +19,13 @@ public class LUIManager : MonoBehaviour
     {
         Instantiate(ResoucesManager.Instance.Resouces["FadeCanvas"]);
     }
+    public void ShowLongTip(string str)
+    {
+        var Tip = Instantiate<GameObject>(ResoucesManager.Instance.Resouces["LongTipUI"]);
+        if (Tip != null)
+        {
+            Tip.GetComponentInChildren<TextMeshProUGUI>().text = str;
+        }
+    }
 }
 

@@ -91,7 +91,7 @@ public class GameMode : MonoBehaviour
             ResetLevel();
             return;
         }
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.F))
             timeSectionManager.FinishThisTimeSection();
     }
 
@@ -131,11 +131,22 @@ public class GameMode : MonoBehaviour
         //        laganFinished = false;
         //        break;
         //    }
-        ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && IfTouchTransport;
-        if (ifPass)
-            OnSuccessPassed();
-        return ifPass;
+        if (!IfPass)
+        {
+            if (gamePlayMode != GamePlayMode.Replay)
+            {
+                ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && IfTouchTransport;
+                if (ifPass)
+                {
+                    OnSuccessPassed();
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
+
     void OnSuccessPassed()
     {
         print("过关成功！");
@@ -146,7 +157,7 @@ public class GameMode : MonoBehaviour
             StartCoroutine(ReplayCoroutine());
         }
         else
-            LoadNextLevel();
+            StartCoroutine(LoadLevelCoroutine(2f));
     }
     IEnumerator ReplayCoroutine()
     {
@@ -171,9 +182,15 @@ public class GameMode : MonoBehaviour
             playerDeathSection = -1;
         }
     }
+    IEnumerator LoadLevelCoroutine(float delay = 1f)
+    {
+        print("delay" + delay + "S");
+        yield return new WaitForSeconds(delay);
+        LoadNextLevel();
+    }
     public void LoadNextLevel()
     {
-        if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCount - 1)
+        if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings - 1)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
