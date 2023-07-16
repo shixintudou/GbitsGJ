@@ -225,6 +225,7 @@ public class TimeSectionManager : MonoBehaviour
         //结束记录
         if (nowTimeSection > 0)
             timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
+        print("时间段" + nowTimeSection + "结束录制");
         RecordManager.instance.endRecord = true;
     }
 

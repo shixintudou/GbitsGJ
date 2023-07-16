@@ -979,7 +979,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1069899030074709860, guid: aade340137bc3004cb4962e0eb2681e3, type: 3}
       propertyPath: m_CellSize.x
-      value: 195.5
+      value: 213.24
       objectReference: {fileID: 0}
     - target: {fileID: 1069899030074709860, guid: aade340137bc3004cb4962e0eb2681e3, type: 3}
       propertyPath: m_CellSize.y
@@ -995,7 +995,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1069899030074709860, guid: aade340137bc3004cb4962e0eb2681e3, type: 3}
       propertyPath: m_Padding.m_Left
-      value: 24
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 1069899030074709861, guid: aade340137bc3004cb4962e0eb2681e3, type: 3}
       propertyPath: DarkCanvas

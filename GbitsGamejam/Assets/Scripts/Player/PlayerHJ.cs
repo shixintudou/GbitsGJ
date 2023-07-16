@@ -44,7 +44,6 @@ public class PlayerHJ : MonoBehaviour
         }
         else
         {
-            ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
             RendererFeatureManager.instance.SetOldTVActive(false);
         }
     }

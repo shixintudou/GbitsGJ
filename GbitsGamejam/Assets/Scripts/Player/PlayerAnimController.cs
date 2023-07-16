@@ -10,7 +10,7 @@ public class PlayerAnimController : MonoBehaviour
     Rigidbody2D rb;
     void Start()
     {
-        animator= GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         player = GetComponent<PlayerHJ>();
         rb = GetComponent<Rigidbody2D>();
     }
@@ -18,13 +18,16 @@ public class PlayerAnimController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetAxisRaw("Horizontal")>0.5f)
+        if (GameMode.Instance.CanPlayerInput())
         {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
-        if(Input.GetAxisRaw("Horizontal")<-0.5f)
-        {
-            transform.localScale = Vector3.one;
+            if (Input.GetAxisRaw("Horizontal") > 0.5f)
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
+            if (Input.GetAxisRaw("Horizontal") < -0.5f)
+            {
+                transform.localScale = Vector3.one;
+            }
         }
         animator.SetFloat("xSpeed", Mathf.Abs(rb.velocity.x));
         animator.SetBool("isAir", !player.CheckIsOnGround());

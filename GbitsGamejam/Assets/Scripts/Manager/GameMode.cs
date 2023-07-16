@@ -77,6 +77,7 @@ public class GameMode : MonoBehaviour
 
         //临时重置
         ReplayManager.instance.IsReadyForLoadNextScene = false;
+        ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
 
         //获取场景中时间轴组件
         timeSectionManager = FindObjectOfType<TimeSectionManager>();
@@ -226,5 +227,16 @@ public class GameMode : MonoBehaviour
 
     public void SwitchCursorImage(bool IfHandmode)
     {
+    }
+    public void ControlShowLevelIntroduce()
+    {
+        if (SceneManager.GetSceneByBuildIndex(0).buildIndex == 0)
+        {
+            LevelIntroducer.Instance.SetIntroduceImageAndEnable(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+    public bool CanPlayerInput()
+    {
+        return gamePlayMode != GamePlayMode.UIInteract;
     }
 }
