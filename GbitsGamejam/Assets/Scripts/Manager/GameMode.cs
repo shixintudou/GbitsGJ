@@ -25,14 +25,16 @@ public class GameMode : MonoBehaviour
 
     [Header("过关数据")]
     bool ifPass;
+    [HideInInspector]
     public int playerDeathSection = -1;
+    [HideInInspector]
     public bool IfTouchTransport;
     public bool IfPass { get => ifPass; }
 
     [Header("关卡配置")]
     public int TimeSectionNum;
     public Vector3 DefaultBornPos;
-    public string playerPrefabName = "Player";
+    string playerPrefabName = "Player";
     //0为自由状态 1-N分别为选中了第N段可分配时间段
 
 
@@ -59,7 +61,6 @@ public class GameMode : MonoBehaviour
     }
     void Start()
     {
-        gamePlayMode = GamePlayMode.Play;
         //单例
         if (instance != this)
         {
@@ -74,6 +75,9 @@ public class GameMode : MonoBehaviour
         DefaultBornPos = Player.transform.position;
         playerPrefabName = Player.name.Replace("Clone", "");
 
+        //临时重置
+        ReplayManager.instance.IsReadyForLoadNextScene = false;
+
         //获取场景中时间轴组件
         timeSectionManager = FindObjectOfType<TimeSectionManager>();
         if (timeSectionManager == null)
@@ -82,6 +86,9 @@ public class GameMode : MonoBehaviour
         m_UIManager = GetComponent<LUIManager>();
         if (m_UIManager == null)
             m_UIManager = gameObject.AddComponent<LUIManager>();
+
+        gamePlayMode = GamePlayMode.UIInteract;
+        m_UIManager.ShowLongTip("选择时间段以开始游戏");
     }
 
     void Update()
@@ -113,7 +120,7 @@ public class GameMode : MonoBehaviour
                 Time.timeScale = 1;
                 if (Player)
                 {
-                    Player.SetVisible(true);
+                   // Player.SetVisible(true);
                     Player.rb.velocity = Vector2.zero;
                 }
             }
@@ -150,6 +157,7 @@ public class GameMode : MonoBehaviour
     void OnSuccessPassed()
     {
         print("过关成功！");
+        timeSectionManager.EndSection();
         if (RecordManager.instance.startRecord)
         {
             SetGameMode(GamePlayMode.Replay);
@@ -157,7 +165,7 @@ public class GameMode : MonoBehaviour
             StartCoroutine(ReplayCoroutine());
         }
         else
-            StartCoroutine(LoadLevelCoroutine(2f));
+            StartCoroutine(LoadLevelCoroutine(1.2f));
     }
     IEnumerator ReplayCoroutine()
     {

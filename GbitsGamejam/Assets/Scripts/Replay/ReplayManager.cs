@@ -22,8 +22,10 @@ public class ReplayManager : MonoBehaviour
 {
     public static ReplayManager instance;
     public List<PlayData> datas;
-
+    public bool endReplay = false;
     Coroutine replayCoroutine;
+
+    public bool IsReadyForLoadNextScene;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -32,10 +34,10 @@ public class ReplayManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(this);
         }
-            
+
         else if (instance != this)
             Destroy(this);
-        
+
     }
     public void SetDataNum(int num)
     {
@@ -47,6 +49,7 @@ public class ReplayManager : MonoBehaviour
     }
     public void StartReplay(Vector2 startPos)
     {
+        endReplay = false;
         GameMode.Instance.SetGameMode(GamePlayMode.Replay);
         PlayerHJ player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHJ>();
         player.transform.position = startPos;
@@ -63,17 +66,44 @@ public class ReplayManager : MonoBehaviour
     {
         foreach (PlayData data in datas)
         {
-            float time = data.horizonData[data.horizonData.Count - 1].endTime;
+            int horiCount = data.horizonData.Count;
+            int jumpCount = data.jumpTimes.Count;
+            float time = 0f;
+            if(horiCount>0)
+            {
+                time = data.horizonData[horiCount - 1].endTime;
+            }
+            if(jumpCount>0)
+            {
+                float t = data.jumpTimes[jumpCount - 1];
+                time = time > t ? time : t;
+            }
+            if(time==0f)
+            {
+                continue;
+            }
             if (data.lagan != null)
             {
                 GameMode.Instance.m_UIManager.CanvasFadeInAndOut();
                 data.lagan.controlledFlat.FlatDisable();
+            }
+            if(player==null||endReplay)
+            {
+                endReplay = true;
+                break;
             }
             StartCoroutine(ReplayClip(player, time, data));
             yield return new WaitForSeconds(time);
         }
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
         RendererFeatureManager.instance.SetOldTVActive(false);
+        if (!IsReadyForLoadNextScene)
+        {
+            //1s∫Û«–ªª≥°æ∞
+            IsReadyForLoadNextScene = true;
+            yield return 1.0f;
+            GameMode.Instance.LoadNextLevel();
+        }
     }
     IEnumerator ReplayClip(PlayerHJ player, float time, PlayData data)
     {
@@ -86,16 +116,21 @@ public class ReplayManager : MonoBehaviour
             player.rb.velocity = Vector2.zero;
         while (t < time)
         {
+            if(player==null||endReplay)
+            {
+                endReplay = true;
+                break;
+            }
             if (jumpIndex < jumpTimes.Count)
             {
-                if (jumpTimes[jumpIndex] <= t+0.1f)
+                if (jumpTimes[jumpIndex] <= t + 0.1f)
                 {
                     if (player)
                     {
                         player.rb.velocity = new Vector2(player.rb.velocity.x, 0);
                         player.Jump();
                     }
-                        
+
                     jumpIndex++;
                 }
             }
@@ -112,9 +147,5 @@ public class ReplayManager : MonoBehaviour
             t += Time.deltaTime;
             yield return null;
         }
-        //1s∫Û«–ªª≥°æ∞
-        print("º¥Ω´«–ªª≥°æ∞");
-        yield return 1.0f;
-        GameMode.Instance.LoadNextLevel();
     }
 }

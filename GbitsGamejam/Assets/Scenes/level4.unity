@@ -1130,7 +1130,6 @@ MonoBehaviour:
   IfTouchTransport: 0
   TimeSectionNum: 2
   DefaultBornPos: {x: 0, y: 0, z: 0}
-  playerPrefabName: Player
 --- !u!1 &1094323504
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,7 +1185,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1153349268}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.4, y: -2.71, z: -1.8972155}
+  m_LocalPosition: {x: -1.4, y: -2.46, z: -1.8972155}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 764016350}

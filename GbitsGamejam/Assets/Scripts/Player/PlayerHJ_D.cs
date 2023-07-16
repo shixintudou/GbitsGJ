@@ -7,7 +7,7 @@ public class PlayerHJ_D : PlayerHJ
     public override void Dead()
     {
         print("dead"+dead);
-        if (!dead)
+        if (!dead&&GameMode.GamePlayMode!=GamePlayMode.Replay)
         {
             dead = true;
             var Body = Instantiate(ResoucesManager.Instance.Resouces["PlayerBody"], this.transform.position, Quaternion.identity);
