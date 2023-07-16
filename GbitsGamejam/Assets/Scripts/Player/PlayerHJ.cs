@@ -37,7 +37,7 @@ public class PlayerHJ : MonoBehaviour
         if (footTrans == null)
             print("Î´»ñÈ¡playerfoot");
         
-        if(SceneManager.GetActiveScene().name.Equals("ActScene"))
+        if(SceneManager.GetActiveScene().name.Contains("ActScene"))
         {
             GameMode.Instance.SetGameMode(GamePlayMode.Act);
             StartCoroutine(ActCoroutine());
@@ -111,6 +111,7 @@ public class PlayerHJ : MonoBehaviour
             StopCoroutine(moveCoroutine);
         }
         moveCoroutine = StartCoroutine(MoveCoroutine(target, time));
+        if(GameMode.GamePlayMode!=GamePlayMode.Act)
         transform.localScale = new Vector3(target > 0 ? -1 : 1, 1, 1);
     }
 
