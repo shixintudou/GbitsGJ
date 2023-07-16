@@ -87,7 +87,7 @@ public class ReplayManager : MonoBehaviour
         {
             if (jumpIndex < jumpTimes.Count)
             {
-                if (jumpTimes[jumpIndex] <= t+0.2f)
+                if (jumpTimes[jumpIndex] <= t+0.1f)
                 {
                     if (player)
                     {
