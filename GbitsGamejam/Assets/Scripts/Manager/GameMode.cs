@@ -77,8 +77,12 @@ public class GameMode : MonoBehaviour
         playerPrefabName = Player.name.Replace("Clone", "");
 
         //临时设置
-        ReplayManager.instance.IsReadyForLoadNextScene = false;
-        ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
+        if (ReplayManager.instance != null)
+        {
+            ReplayManager.instance.IsReadyForLoadNextScene = false;
+            ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
+        }
+        
 
         print("静态初始化" + (levelFisrtlyEnter == null));
         if (levelFisrtlyEnter == null)
