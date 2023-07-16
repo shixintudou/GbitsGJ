@@ -23,28 +23,41 @@ public class RendererFeatureManager : MonoBehaviour
 
     void Start()
     {
-        // ShakeForSeconds(1.0f);
+        // ShakeForSecondsWithIntensity(10.0f, 0.08f);
         //TransitionForSeconds(1);
     }
 
     // 可调用函数
     // ShakeForSeconds : 屏幕晃动数秒
+    // ShakeForSecondsWithIntensity(seconds, intensity) : 屏幕晃动数秒，可以设定晃动强度
     // ColorInvertForSeveralTimes : 屏幕颜色反转多次
     // SetOldTVActive : 设置老电视效果是否激活
     // SetLineActive : 设置线条效果是否激活
     // TransitionForSeconds(secs) : 屏幕扰动+RGB转场数秒
     // TransitionForSeconds(secs, times) : 屏幕扰动+RGB转场secs秒，转场times次（用来改变转场速度）
 
+    ShakeRendererFeature shakeRendererFeature;
     public void ShakeForSeconds(float seconds)
     {
-        rendererData.rendererFeatures[0].SetActive(true);
+        shakeRendererFeature = (ShakeRendererFeature)rendererData.rendererFeatures[0];
+        shakeRendererFeature.SetActive(true);
+        shakeRendererFeature.settings.shakeIntensity = 0.04f;
+        StartCoroutine(ShakeForSecondsCoroutine(seconds));
+    }
+
+    public void ShakeForSecondsWithIntensity(float seconds, float intensity)
+    {
+        shakeRendererFeature = (ShakeRendererFeature)rendererData.rendererFeatures[0];
+        shakeRendererFeature.SetActive(true);
+        shakeRendererFeature.settings.shakeIntensity = intensity;
         StartCoroutine(ShakeForSecondsCoroutine(seconds));
     }
 
     IEnumerator ShakeForSecondsCoroutine(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        rendererData.rendererFeatures[0].SetActive(false);
+        shakeRendererFeature.SetActive(false);
+        shakeRendererFeature.settings.shakeIntensity = 0.04f;
     }
 
     public void ColorInvertForSeveralTimes(int times)
