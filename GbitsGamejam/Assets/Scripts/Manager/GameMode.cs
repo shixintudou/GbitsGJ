@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public enum GamePlayMode
 {
-    Play, Replay, UIInteract,Act
+    Play, Replay, UIInteract, Act
 }
 
 public class GameMode : MonoBehaviour
@@ -25,16 +25,21 @@ public class GameMode : MonoBehaviour
 
     [Header("过关数据")]
     bool ifPass;
+    bool IfStartLevel;
     [HideInInspector]
     public int playerDeathSection = -1;
     [HideInInspector]
     public bool IfTouchTransport;
+    public static List<bool> levelFisrtlyEnter;//记录每个关卡是否第一次进入
     public bool IfPass { get => ifPass; }
+
 
     [Header("关卡配置")]
     public int TimeSectionNum;
+    [HideInInspector]
     public Vector3 DefaultBornPos;
     string playerPrefabName = "Player";
+
     //0为自由状态 1-N分别为选中了第N段可分配时间段
 
 
@@ -43,10 +48,10 @@ public class GameMode : MonoBehaviour
 
     public PlayerHJ Player
     {
-        get => GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>();
+        get => 
+           GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>();
     }
 
-    List<LaganController> laganRequiredToPass = new List<LaganController>();
 
     private void Awake()
     {
@@ -67,21 +72,21 @@ public class GameMode : MonoBehaviour
             Destroy(instance);
             instance = this;
         }
-        //获取场景中过关所需的拉杆，注册状态
-        var keys = FindObjectsOfType<LaganController>();
-        foreach (var key in keys)
-            laganRequiredToPass.Add(key);
         //记录玩家出生位置
         DefaultBornPos = Player.transform.position;
         playerPrefabName = Player.name.Replace("Clone", "");
 
-        //临时重置
-        if(ReplayManager.instance != null)
+        //临时设置
+        ReplayManager.instance.IsReadyForLoadNextScene = false;
+        ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
+
+        print("静态初始化" + (levelFisrtlyEnter == null));
+        if (levelFisrtlyEnter == null)
         {
-            ReplayManager.instance.IsReadyForLoadNextScene = false;
-            ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
+            levelFisrtlyEnter = new List<bool>();
+            for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+                levelFisrtlyEnter.Add(false);
         }
-        
 
         //获取场景中时间轴组件
         timeSectionManager = FindObjectOfType<TimeSectionManager>();
@@ -93,9 +98,18 @@ public class GameMode : MonoBehaviour
             m_UIManager = gameObject.AddComponent<LUIManager>();
 
         gamePlayMode = GamePlayMode.UIInteract;
-        m_UIManager.ShowLongTip("选择时间段以开始游戏");
-    }
+        if (!CheckShowLevelIntroduce())
+            StartLevel();
 
+    }
+    public void StartLevel()
+    {
+        if (!IfStartLevel)
+        {
+            IfStartLevel = true;
+            m_UIManager.ShowLongTip("选择时间段以开始游戏");
+        }
+    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -125,7 +139,7 @@ public class GameMode : MonoBehaviour
                 Time.timeScale = 1;
                 if (Player)
                 {
-                   // Player.SetVisible(true);
+                    // Player.SetVisible(true);
                     Player.rb.velocity = Vector2.zero;
                 }
             }
@@ -232,12 +246,18 @@ public class GameMode : MonoBehaviour
     public void SwitchCursorImage(bool IfHandmode)
     {
     }
-    public void ControlShowLevelIntroduce()
+    public bool CheckShowLevelIntroduce()
     {
-        if (SceneManager.GetSceneByBuildIndex(0).buildIndex == 0)
+        int curSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        print(levelFisrtlyEnter[curSceneIndex] + " " + (LevelIntroducer.Instance != null));
+        if (!levelFisrtlyEnter[curSceneIndex] && LevelIntroducer.Instance != null)
         {
+            levelFisrtlyEnter[curSceneIndex] = true;
+            //显示介绍
             LevelIntroducer.Instance.SetIntroduceImageAndEnable(SceneManager.GetActiveScene().buildIndex);
+            return true;
         }
+        return false;
     }
     public bool CanPlayerInput()
     {

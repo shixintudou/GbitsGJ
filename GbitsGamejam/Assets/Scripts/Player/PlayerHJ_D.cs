@@ -13,6 +13,7 @@ public class PlayerHJ_D : PlayerHJ
             var Body = Instantiate(ResoucesManager.Instance.Resouces["PlayerBody"], this.transform.position, Quaternion.identity);
             Body.transform.rotation = Quaternion.Euler(0, 0, 90f);
             GameMode.Instance.playerDeathSection = GameMode.Instance.timeSectionManager.NowTimeSection;
+            //转场效果
             RendererFeatureManager.instance.TransitionForSeconds(0.3f, 1);
             GameMode.Instance.RespawnPlayer(false);
             Destroy(this.gameObject);

@@ -141,6 +141,8 @@ public class PlayerHJ : MonoBehaviour
             dead = true;
             var Body = Instantiate(ResoucesManager.Instance.Resouces["PlayerBody"], this.transform.position, Quaternion.identity);
             Body.transform.rotation = Quaternion.Euler(0, 0, 90f);
+            //转场效果
+            RendererFeatureManager.instance.ShakeForSeconds(0.1f);
             GameMode.Instance.timeSectionManager.EndSection();
             GameMode.Instance.playerDeathSection = GameMode.Instance.timeSectionManager.NowTimeSection;
             Destroy(this.gameObject);
