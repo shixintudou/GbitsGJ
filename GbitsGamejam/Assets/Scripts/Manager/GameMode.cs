@@ -76,8 +76,12 @@ public class GameMode : MonoBehaviour
         playerPrefabName = Player.name.Replace("Clone", "");
 
         //临时重置
-        ReplayManager.instance.IsReadyForLoadNextScene = false;
-        ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
+        if(ReplayManager.instance != null)
+        {
+            ReplayManager.instance.IsReadyForLoadNextScene = false;
+            ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
+        }
+        
 
         //获取场景中时间轴组件
         timeSectionManager = FindObjectOfType<TimeSectionManager>();

@@ -20,7 +20,10 @@ public class ActManager : MonoBehaviour
     private void Start()
     {
         index = SceneManager.GetActiveScene().name[8] - '0';
-        print(SceneManager.GetActiveScene().name[8]);
+        if(index==3)
+        {
+            RendererFeatureManager.instance.SetLineActive(false);
+        }
     }
     public void StartAct()
     {
@@ -29,15 +32,25 @@ public class ActManager : MonoBehaviour
         playerAnimController.animator.SetBool("ActMove", true);
         playerAnimController.animator.SetBool("ActMode", true);
         GameMode.Instance.SetGameMode(GamePlayMode.Act);
+        if(index==1)
+        {
+            RendererFeatureManager.instance.SetLineActive(true);
+        }
         StartCoroutine(ActCoroutine());
     }
     IEnumerator ActCoroutine()
     {
         float t = 0f;
+        int x = 1;
+        if(index==3)
+        {
+            x = -1;
+            playerAnimController.animator.SetBool("Heart", true);
+        }
         while (t<actTime)
         {
             t+= Time.deltaTime;
-            player.transform.position += Vector3.right * Time.deltaTime * actMoveSpeed;
+            player.transform.position += x * Vector3.right * Time.deltaTime * actMoveSpeed;
             yield return null;
         }
         if(index==2)
@@ -45,6 +58,10 @@ public class ActManager : MonoBehaviour
             GameMode.Instance.SetGameMode(GamePlayMode.Play);
             playerAnimController.animator.SetBool("ActMove", false);
             playerAnimController.animator.SetBool("ActMode", false);
+        }
+        if(index==1)
+        {
+            SceneManager.LoadScene("ActScene2");
         }
         //yield return new WaitForSeconds(actTime);
     }
