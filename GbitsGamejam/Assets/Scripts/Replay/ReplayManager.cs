@@ -75,11 +75,12 @@ public class ReplayManager : MonoBehaviour
         float t = 0f;
         List<HorizontalTimeData> horizontalData = data.horizonData;
         List<float> jumpTimes = data.jumpTimes;
+        player.rb.velocity = Vector2.zero;
         while (t<time)
         {
             if(jumpIndex < jumpTimes.Count)
             {
-                if (jumpTimes[jumpIndex]<=t)
+                if (jumpTimes[jumpIndex]<=t+0.05f)
                 {
                     player.Jump();
                     jumpIndex++;
