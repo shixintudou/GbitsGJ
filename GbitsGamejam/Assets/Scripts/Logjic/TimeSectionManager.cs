@@ -112,7 +112,7 @@ public class TimeSectionManager : MonoBehaviour
         }
         else
         {
-            //前一时间段尚未结束，玩家需指定新的位置
+            //前一时间段尚未结束(/开始)，玩家需指定新的位置
             if (!timeSectionsDataList[number - 1 - 1].ifEnded)
                 StartedChoosingNewBornPosition();
             //玩家转移到上一时间段结束位置
@@ -122,6 +122,7 @@ public class TimeSectionManager : MonoBehaviour
                 GameMode.Instance.SetPlayerPos(StarPos);
                 timeSectionsDataList[nowTimeSection - 1].playerPositonOnSectionStart = StarPos;
                 GameMode.Instance.SetGameMode(GamePlayMode.Play);
+                StartSection();
             }
         }
         if (animator)
@@ -213,9 +214,10 @@ public class TimeSectionManager : MonoBehaviour
 
     public void StartSection()
     {
-        //结束记录
+        //开始记录
         if (nowTimeSection > 0)
             timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
+        print("时间段" + nowTimeSection + "开始录制");
         RecordManager.instance.StartRecord(nowTimeSection - 1);
     }
     public void EndSection()

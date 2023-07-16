@@ -1256,9 +1256,8 @@ MonoBehaviour:
   m_UIManager: {fileID: 0}
   playerDeathSection: -1
   IfTouchTransport: 0
-  TimeSectionNum: 1
+  TimeSectionNum: 2
   DefaultBornPos: {x: 0, y: 0, z: 0}
-  playerPrefabName: Player
 --- !u!1 &1151398792
 GameObject:
   m_ObjectHideFlags: 0
@@ -1792,6 +1791,18 @@ PrefabInstance:
     - target: {fileID: 806396492778446325, guid: d6fc1b3eaa125b749af52cf51be3d61c, type: 3}
       propertyPath: orthographic size
       value: 8.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 3548987317637870563, guid: d6fc1b3eaa125b749af52cf51be3d61c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.527545
+      objectReference: {fileID: 0}
+    - target: {fileID: 3548987317637870563, guid: d6fc1b3eaa125b749af52cf51be3d61c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5276887
+      objectReference: {fileID: 0}
+    - target: {fileID: 3548987317637870563, guid: d6fc1b3eaa125b749af52cf51be3d61c, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3283
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6fc1b3eaa125b749af52cf51be3d61c, type: 3}
