@@ -18,7 +18,7 @@ public class PlayerAnimController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameMode.Instance.CanPlayerInput())
+        if (GameMode.Instance&&GameMode.Instance.CanPlayerInput())
         {
             if (Input.GetAxisRaw("Horizontal") > 0.5f)
             {
