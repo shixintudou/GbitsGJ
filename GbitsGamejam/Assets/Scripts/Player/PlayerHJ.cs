@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 //横板跳跃玩家类
@@ -36,8 +36,17 @@ public class PlayerHJ : MonoBehaviour
         footTrans = transform.Find("foot");
         if (footTrans == null)
             print("未获取playerfoot");
-        ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
-        RendererFeatureManager.instance.SetOldTVActive(false);
+        
+        if(SceneManager.GetActiveScene().name.Equals("ActScene"))
+        {
+            GameMode.Instance.SetGameMode(GamePlayMode.Act);
+            StartCoroutine(ActCoroutine());
+        }
+        else
+        {
+            ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
+            RendererFeatureManager.instance.SetOldTVActive(false);
+        }
     }
     void Update()
     {
@@ -145,6 +154,11 @@ public class PlayerHJ : MonoBehaviour
     {
         var bisOnGround = Physics2D.OverlapCircle(footTrans.position, 0.2f, LayerMask.GetMask("Ground"));
         return bisOnGround;
+    }
+    IEnumerator ActCoroutine()
+    {
+        yield return new WaitForSeconds(0.3f);
+        ActManager.instance.StartAct();
     }
 
     IEnumerator MoveCoroutine(float target, float time)
