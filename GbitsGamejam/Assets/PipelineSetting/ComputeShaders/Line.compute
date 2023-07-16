@@ -1,5 +1,6 @@
 // Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel Line
+#pragma kernel LineHorizontal
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
@@ -12,12 +13,16 @@ float _VignetteSmoothness;
 float _VignetteRoundness;
 int _UseGray;
 
-float _NoiseSpeed;
-float _NoiseFading;
+Texture2D _NoiseTex;
+float _HorizontalIntensity;
+float _StripColorAdjustIndensity;
+float4 _StripColorAdjustColor;
+
 
 Texture2D _CameraColorTexture;
 RWTexture2D<float4> Result;
 
+SAMPLER(sampler_point_clamp);
 SAMPLER(sampler_linear_clamp);
 
 float randomNoise(float2 c)
@@ -60,6 +65,42 @@ void Line(uint3 id : SV_DispatchThreadID)
     uv_randomTrunc *= -1;
     uv_randomTrunc += step(uv_trunc, 0.5);
     sceneColor -= saturate(float4(uv_randomTrunc, uv_randomTrunc, uv_randomTrunc, 1.0) * _LineIntensity);
+
+    sceneColor.rgb *= lerp(0.0, 1.0, vfactor);
+    sceneColor.a = lerp(1.0, sceneColor.a, vfactor);
+
+    Result[id.xy] = sceneColor;
+}
+
+[numthreads(8, 8, 1)]
+void LineHorizontal(uint3 id : SV_DispatchThreadID)
+{
+    float2 resolution = _BufferSize.xy;
+    float2 invResolution = _BufferSize.zw;
+    float2 uv = (id.xy + 0.5) * invResolution;
+
+    half2 d = abs(uv - float2(0.5f, 0.5f)) * _VignetteIntensity;
+    d.x *= lerp(1.0, _BufferSize.x / _BufferSize.y, 0.0);
+    d = pow(saturate(d), _VignetteRoundness);
+    half vfactor = pow(saturate(1.0 - dot(d, d)), _VignetteSmoothness);
+
+    float4 sceneColor = _CameraColorTexture.SampleLevel(sampler_linear_clamp, uv, 0);
+    float luminance = dot(sceneColor.rgb, float3(0.22, 0.707, 0.071));
+    float4 grayColor = float4(luminance, luminance, luminance, 1);
+    sceneColor = lerp(sceneColor, grayColor, _UseGray);
+
+    // horizontal line
+    float4 stripNoise = _NoiseTex.SampleLevel(sampler_point_clamp, uv, 0);
+    float threshold = 1.001 - _HorizontalIntensity * 1.001;
+
+    // uv shift
+    float uvShift = step(threshold, pow(abs(stripNoise.w), 3));
+    float2 uvNew = frac(uv + stripNoise.yz * uvShift);
+    float4 source = _CameraColorTexture.SampleLevel(sampler_linear_clamp, uv, 0);
+
+    float stripIndensity = step(threshold, pow(abs(stripNoise.x), 3)) * _StripColorAdjustIndensity;
+    sceneColor.rgb = lerp(source, (_StripColorAdjustColor).xxxx, stripIndensity).rgb;
+    sceneColor.a = source.a;
 
     sceneColor.rgb *= lerp(0.0, 1.0, vfactor);
     sceneColor.a = lerp(1.0, sceneColor.a, vfactor);
