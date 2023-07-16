@@ -27,15 +27,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78917d711a5f7844586328de3ba366b6, type: 3}
   m_Name: Transition
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     computeShader: {fileID: 7200000, guid: b299fdfcc2e59014fae8208a127e04e2, type: 3}
     frequency: 8
     jitterIndensity: 0.689
-    rgbScale: 0.597
+    rgbScale: 0.513
     blockSpeed: 0.481
     blockAmplitude: 0.095
-    jumpProgress: 5.0060506
+    jumpProgress: 1.0024045
     noiseTex: {fileID: 2800000, guid: 5876b3d37d9adec4da3282c434f8ebf4, type: 3}
 --- !u!114 &-4655093591777948665
 MonoBehaviour:
