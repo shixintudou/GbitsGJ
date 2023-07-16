@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LevelIntroducer : MonoBehaviour
 {
-    public Sprite[] LevelIntroduces;
+   // public Sprite[] LevelIntroduces;
+    Animator animator;
     private static LevelIntroducer instance;
     public static LevelIntroducer Instance
     {
@@ -30,7 +32,8 @@ public class LevelIntroducer : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(gameObject);
-        image = GetComponentInChildren<Image>();
+        //image = GetComponentInChildren<Image>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -40,9 +43,9 @@ public class LevelIntroducer : MonoBehaviour
     }
     public void SetIntroduceImageAndEnable(int index)
     {
-        if (index < 0 && index >= LevelIntroduces.Length) return;
+        if (index < 0 && index >= SceneManager.sceneCountInBuildSettings) return;
         GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
-        image.sprite = LevelIntroduces[index];
+        //animtor.set
         gameObject.SetActive(true);
         Invoke("DisableThis", 3f);
     }
@@ -50,5 +53,6 @@ public class LevelIntroducer : MonoBehaviour
     {
         gameObject.SetActive(false);
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
+        GameMode.Instance.StartLevel();
     }
 }
