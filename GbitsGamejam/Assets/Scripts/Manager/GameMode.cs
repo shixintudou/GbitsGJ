@@ -32,6 +32,7 @@ public class GameMode : MonoBehaviour
     [Header("关卡配置")]
     public int TimeSectionNum;
     public Vector3 DefaultBornPos;
+    public string playerPrefabName = "Player";
     //0为自由状态 1-N分别为选中了第N段可分配时间段
 
 
@@ -58,6 +59,7 @@ public class GameMode : MonoBehaviour
     }
     void Start()
     {
+        gamePlayMode = GamePlayMode.Play;
         //单例
         if (instance != this)
         {
@@ -69,7 +71,8 @@ public class GameMode : MonoBehaviour
         foreach (var key in keys)
             laganRequiredToPass.Add(key);
         //记录玩家出生位置
-        DefaultBornPos=Player.transform.position;
+        DefaultBornPos = Player.transform.position;
+        playerPrefabName = Player.name.Replace("Clone", "");
 
         //获取场景中时间轴组件
         timeSectionManager = FindObjectOfType<TimeSectionManager>();
@@ -136,9 +139,14 @@ public class GameMode : MonoBehaviour
     void OnSuccessPassed()
     {
         print("过关成功！");
-        SetGameMode(GamePlayMode.Replay);
-        m_UIManager.CanvasFadeInAndOut();
-        StartCoroutine(ReplayCoroutine());
+        if (RecordManager.instance.startRecord)
+        {
+            SetGameMode(GamePlayMode.Replay);
+            m_UIManager.CanvasFadeInAndOut();
+            StartCoroutine(ReplayCoroutine());
+        }
+        else
+            LoadNextLevel();
     }
     IEnumerator ReplayCoroutine()
     {
@@ -152,20 +160,23 @@ public class GameMode : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void RespawnPlayer()
+    public void RespawnPlayer(bool CheckIfPlayerNull = true)
     {
-        if (Player == null)
+        if (Player == null || !CheckIfPlayerNull)
         {
-            var player_obj= Instantiate(ResoucesManager.Instance.Resouces["Player"],timeSectionManager.GetCurSectionData().playerPositonOnSectionStart, Quaternion.identity);
+            Vector3 spawnPos = timeSectionManager.GetCurSectionData() != null ? timeSectionManager.GetCurSectionData().playerPositonOnSectionStart : DefaultBornPos;
+            var player_obj = Instantiate(ResoucesManager.Instance.Resouces[playerPrefabName], spawnPos, Quaternion.identity);
             if (player_obj == null)
                 print("player重生");
             playerDeathSection = -1;
         }
     }
-    IEnumerator ReloadLevel()
+    public void LoadNextLevel()
     {
-        yield return 0.3f;
-
+        if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCount - 1)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
     }
     /// <summary>
     /// 当玩家接触到逻辑漏洞
