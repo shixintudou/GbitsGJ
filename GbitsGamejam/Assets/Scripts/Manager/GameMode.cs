@@ -98,6 +98,8 @@ public class GameMode : MonoBehaviour
             m_UIManager = gameObject.AddComponent<LUIManager>();
 
         gamePlayMode = GamePlayMode.UIInteract;
+        if (SceneManager.GetActiveScene().name.Contains("ActScene"))
+            return;
         if (!CheckShowLevelIntroduce())
             StartLevel();
 

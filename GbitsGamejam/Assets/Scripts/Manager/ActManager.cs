@@ -6,7 +6,10 @@ public class ActManager : MonoBehaviour
 {
     public static ActManager instance;
     public float actMoveSpeed;
-    public float actTime; 
+    public float actTime;
+    public GameObject video;
+    public GameObject videoCamera;
+    public GameObject mainCamera;
     GameObject player;
     PlayerAnimController playerAnimController;
     int index;
@@ -61,7 +64,7 @@ public class ActManager : MonoBehaviour
         }
         if(index==1)
         {
-            SceneManager.LoadScene("ActScene2");
+            StartCoroutine(VideoCoroutine());
         }
         //yield return new WaitForSeconds(actTime);
     }
@@ -80,5 +83,14 @@ public class ActManager : MonoBehaviour
         {
             SceneManager.LoadScene(sceneName);
         }
+    }
+    public IEnumerator VideoCoroutine()
+    {
+        
+        videoCamera.SetActive(true);
+        video.SetActive(true);
+        mainCamera.SetActive(false);
+        yield return new WaitForSeconds(22);
+        SceneManager.LoadScene("ActScene2");
     }
 }
