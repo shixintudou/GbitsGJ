@@ -85,6 +85,7 @@ public class ReplayManager : MonoBehaviour
             if (data.lagan != null)
             {
                 GameMode.Instance.m_UIManager.CanvasFadeInAndOut();
+                if(data.lagan.controlledFlat)
                 data.lagan.controlledFlat.FlatDisable();
             }
             if(player==null||endReplay)
