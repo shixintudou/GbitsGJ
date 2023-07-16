@@ -27,7 +27,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78917d711a5f7844586328de3ba366b6, type: 3}
   m_Name: Transition
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     computeShader: {fileID: 7200000, guid: b299fdfcc2e59014fae8208a127e04e2, type: 3}
     frequency: 8

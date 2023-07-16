@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public enum GamePlayMode
 {
-    Play, Replay, UIInteract
+    Play, Replay, UIInteract,Act
 }
 
 public class GameMode : MonoBehaviour
