@@ -33,10 +33,13 @@ public class TimeSectionManager : MonoBehaviour
     public int NowBugsNum { get => nowBugsNum; }
 
     bool isSelectingPosition;
+    Animator animator;
 
     void Start()
     {
-
+        animator = GetComponent<Animator>();
+        if(animator)
+            animator.SetInteger("MaxSection",GameMode.Instance.TimeSectionNum);
     }
 
     // Update is called once per frame
@@ -124,6 +127,8 @@ public class TimeSectionManager : MonoBehaviour
                 }
             }
         }
+        if (animator)
+            animator.SetInteger("SelectSection", nowTimeSection);
         ////选择的时间段已开始过，玩家转移到该时间段结束位置
         //else
         //{

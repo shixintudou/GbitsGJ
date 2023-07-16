@@ -91,7 +91,7 @@ public class GameMode : MonoBehaviour
             ResetLevel();
             return;
         }
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.F))
             timeSectionManager.FinishThisTimeSection();
     }
 
