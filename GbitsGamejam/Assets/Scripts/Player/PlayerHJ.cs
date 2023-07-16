@@ -27,7 +27,7 @@ public class PlayerHJ : MonoBehaviour
     [HideInInspector]
     public Rigidbody2D rb;
     Coroutine moveCoroutine;
-    bool dead = false;
+    protected bool dead = false;
 
     // Start is called before the first frame update
     void Start()
@@ -124,7 +124,7 @@ public class PlayerHJ : MonoBehaviour
             }
         }
     }
-    public void Dead()
+    public virtual void Dead()
     {
         print("dead");
         if (!dead)

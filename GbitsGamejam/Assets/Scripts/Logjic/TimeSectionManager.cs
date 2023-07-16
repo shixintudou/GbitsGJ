@@ -117,7 +117,9 @@ public class TimeSectionManager : MonoBehaviour
                 //玩家转移到上一时间段结束位置
                 else
                 {
-                    GameMode.Instance.SetPlayerPos(timeSectionsDataList[number - 1 - 1].playerPositonOnSectionEnd);
+                    Vector3 StarPos = timeSectionsDataList[number - 1 - 1].playerPositonOnSectionEnd;
+                    GameMode.Instance.SetPlayerPos(StarPos);
+                    timeSectionsDataList[nowTimeSection - 1].playerPositonOnSectionStart = StarPos;
                     GameMode.Instance.SetGameMode(GamePlayMode.Play);
                 }
             }
@@ -176,6 +178,7 @@ public class TimeSectionManager : MonoBehaviour
                 EndSection();
                 GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
             }
+            GameMode.Instance.m_UIManager.ShowTip("时间段已结束");
         }
         else if (NowTimeSection == 0)
         {
