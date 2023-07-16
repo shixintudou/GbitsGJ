@@ -38,8 +38,8 @@ public class TimeSectionManager : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        if(animator)
-            animator.SetInteger("MaxSection",GameMode.Instance.TimeSectionNum);
+        if (animator)
+            animator.SetInteger("MaxSection", GameMode.Instance.TimeSectionNum);
     }
 
     // Update is called once per frame
@@ -89,42 +89,39 @@ public class TimeSectionManager : MonoBehaviour
             }
         }
         print("选择时间段" + number);
-        //是否需要复活玩家
-        if (GameMode.Instance.playerDeathSection >= 0 && number < GameMode.Instance.playerDeathSection)
-        {
-            GameMode.Instance.RespawnPlayer();
-        }
-        nowTimeSection = number;
         //选择的时间段已开始过
         if (timeSectionsDataList[number - 1].ifStarted)
         {
             GameMode.Instance.m_UIManager.ShowTip("该时间段已结束!");
             return;
         }
+        //是否需要复活玩家
+        if (GameMode.Instance.playerDeathSection >= 0 && number < GameMode.Instance.playerDeathSection)
+        {
+            GameMode.Instance.RespawnPlayer();
+        }
+        nowTimeSection = number;
         //选择的时间段未开始过
+        if (number == 1)
+        {
+            //玩家转移到默认出生点
+            GameMode.Instance.SetPlayerPos(GameMode.Instance.DefaultBornPos);
+            timeSectionsDataList[0].playerPositonOnSectionStart = GameMode.Instance.DefaultBornPos;
+            StartSection();
+            GameMode.Instance.SetGameMode(GamePlayMode.Play);
+        }
         else
         {
-            if (number == 1)
-            {
-                //玩家转移到默认出生点
-                GameMode.Instance.SetPlayerPos(GameMode.Instance.DefaultBornPos);
-                timeSectionsDataList[0].playerPositonOnSectionStart = GameMode.Instance.DefaultBornPos;
-                StartSection();
-                GameMode.Instance.SetGameMode(GamePlayMode.Play);
-            }
+            //前一时间段尚未结束，玩家需指定新的位置
+            if (!timeSectionsDataList[number - 1 - 1].ifEnded)
+                StartedChoosingNewBornPosition();
+            //玩家转移到上一时间段结束位置
             else
             {
-                //前一时间段尚未结束，玩家需指定新的位置
-                if (!timeSectionsDataList[number - 1 - 1].ifEnded)
-                    StartedChoosingNewBornPosition();
-                //玩家转移到上一时间段结束位置
-                else
-                {
-                    Vector3 StarPos = timeSectionsDataList[number - 1 - 1].playerPositonOnSectionEnd;
-                    GameMode.Instance.SetPlayerPos(StarPos);
-                    timeSectionsDataList[nowTimeSection - 1].playerPositonOnSectionStart = StarPos;
-                    GameMode.Instance.SetGameMode(GamePlayMode.Play);
-                }
+                Vector3 StarPos = timeSectionsDataList[number - 1 - 1].playerPositonOnSectionEnd;
+                GameMode.Instance.SetPlayerPos(StarPos);
+                timeSectionsDataList[nowTimeSection - 1].playerPositonOnSectionStart = StarPos;
+                GameMode.Instance.SetGameMode(GamePlayMode.Play);
             }
         }
         if (animator)
@@ -200,7 +197,17 @@ public class TimeSectionManager : MonoBehaviour
         if (!GameMode.Instance.CheckIfPass())
         {
             GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
-            GameMode.Instance.m_UIManager.ShowTip("当前时间段已结束");
+            bool ifAllSectionEnded = true;
+            foreach (var data in TimeSectionsDataList)
+                if (!data.ifEnded)
+                {
+                    ifAllSectionEnded = false;
+                    break;
+                }
+            if (ifAllSectionEnded)
+                GameMode.Instance.m_UIManager.ShowLongTip("似乎已无法继续游戏，请重试");
+            else
+                GameMode.Instance.m_UIManager.ShowTip("当前时间段已结束");
         }
     }
 

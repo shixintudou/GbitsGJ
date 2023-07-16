@@ -24,7 +24,7 @@ public class RendererFeatureManager : MonoBehaviour
     void Start()
     {
         // ShakeForSeconds(1.0f);
-        TransitionForSeconds(1);
+        //TransitionForSeconds(1);
     }
 
     // 可调用函数

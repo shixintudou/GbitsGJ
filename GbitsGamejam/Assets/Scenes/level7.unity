@@ -290,7 +290,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &357026222
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -837,7 +837,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 875897935}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.92, y: -2.71, z: -1.8972155}
+  m_LocalPosition: {x: -4.92, y: -2.42, z: -1.8972155}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1082843558}
@@ -2013,6 +2013,30 @@ PrefabInstance:
     - target: {fileID: 3940316850311194814, guid: efe75e88fbd62cb4eac13b437f981488, type: 3}
       propertyPath: m_Name
       value: Canvas_SingleTIme
+      objectReference: {fileID: 0}
+    - target: {fileID: 3940316850415858982, guid: efe75e88fbd62cb4eac13b437f981488, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3940316850415858982, guid: efe75e88fbd62cb4eac13b437f981488, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3940316850415858982, guid: efe75e88fbd62cb4eac13b437f981488, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3940316850415858982, guid: efe75e88fbd62cb4eac13b437f981488, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3940316850415858982, guid: efe75e88fbd62cb4eac13b437f981488, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3940316850415858982, guid: efe75e88fbd62cb4eac13b437f981488, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: efe75e88fbd62cb4eac13b437f981488, type: 3}

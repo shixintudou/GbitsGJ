@@ -82,7 +82,8 @@ public class ReplayManager : MonoBehaviour
         float t = 0f;
         List<HorizontalTimeData> horizontalData = data.horizonData;
         List<float> jumpTimes = data.jumpTimes;
-        player.rb.velocity = Vector2.zero;
+        if (player)
+            player.rb.velocity = Vector2.zero;
         while (t < time)
         {
             if (jumpIndex < jumpTimes.Count)
@@ -111,5 +112,9 @@ public class ReplayManager : MonoBehaviour
             t += Time.deltaTime;
             yield return null;
         }
+        //1sºóÇÐ»»³¡¾°
+        print("¼´½«ÇÐ»»³¡¾°");
+        yield return 1.0f;
+        GameMode.Instance.LoadNextLevel();
     }
 }
