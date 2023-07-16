@@ -17,6 +17,7 @@ public class LevelIntroducer : MonoBehaviour
         }
     }
     Image image;
+    GameObject imageObj;
     private void Awake()
     {
         if (instance == null)
@@ -33,6 +34,8 @@ public class LevelIntroducer : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
         animator = GetComponentInChildren<Animator>();
+        if (animator)
+            imageObj = animator.gameObject;
     }
 
     // Update is called once per frame
@@ -40,17 +43,26 @@ public class LevelIntroducer : MonoBehaviour
     {
 
     }
+    //index´Ó0¿ªÊ¼
     public void SetIntroduceImageAndEnable(int index)
     {
-        if (index < 0 && index >= SceneManager.sceneCountInBuildSettings) return;
+        if (index < 0 && index >= SceneManager.sceneCountInBuildSettings-1) return;
+        imageObj.SetActive(true);
         GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
-        animator.SetInteger("LevelIndex",index);
-        gameObject.SetActive(true);
-        Invoke("DisableThis", 3f);
+        // animator.SetInteger("LevelIndex", index);
+        animator.Play((index + 1).ToString(), 0, 1);
+        StartCoroutine(DC());
+    }
+    IEnumerator DC()
+    {
+        yield return 3.0f;
+        imageObj.SetActive(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        GameMode.Instance.StartLevel();
     }
     public void DisableThis()
     {
-        gameObject.SetActive(false);
+        imageObj.SetActive(false);
         GameMode.Instance.StartLevel();
     }
 }

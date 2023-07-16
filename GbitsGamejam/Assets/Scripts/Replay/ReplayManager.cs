@@ -69,25 +69,25 @@ public class ReplayManager : MonoBehaviour
             int horiCount = data.horizonData.Count;
             int jumpCount = data.jumpTimes.Count;
             float time = 0f;
-            if(horiCount>0)
+            if (horiCount > 0)
             {
                 time = data.horizonData[horiCount - 1].endTime;
             }
-            if(jumpCount>0)
+            if (jumpCount > 0)
             {
                 float t = data.jumpTimes[jumpCount - 1];
                 time = time > t ? time : t;
             }
-            if(time==0f)
+            if (time == 0f)
             {
                 continue;
             }
-            if (data.lagan != null)
+            if (data.lagan != null && data.lagan.controlledFlat != null)
             {
                 GameMode.Instance.m_UIManager.CanvasFadeInAndOut();
                 data.lagan.controlledFlat.FlatDisable();
             }
-            if(player==null||endReplay)
+            if (player == null || endReplay)
             {
                 endReplay = true;
                 break;
@@ -116,7 +116,7 @@ public class ReplayManager : MonoBehaviour
             player.rb.velocity = Vector2.zero;
         while (t < time)
         {
-            if(player==null||endReplay)
+            if (player == null || endReplay)
             {
                 endReplay = true;
                 break;

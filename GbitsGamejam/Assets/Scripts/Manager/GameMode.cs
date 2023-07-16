@@ -48,7 +48,7 @@ public class GameMode : MonoBehaviour
 
     public PlayerHJ Player
     {
-        get => 
+        get =>
            GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>();
     }
 
@@ -80,7 +80,6 @@ public class GameMode : MonoBehaviour
         ReplayManager.instance.IsReadyForLoadNextScene = false;
         ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
 
-        print("æ≤Ã¨≥ı ºªØ" + (levelFisrtlyEnter == null));
         if (levelFisrtlyEnter == null)
         {
             levelFisrtlyEnter = new List<bool>();
@@ -98,8 +97,8 @@ public class GameMode : MonoBehaviour
             m_UIManager = gameObject.AddComponent<LUIManager>();
 
         gamePlayMode = GamePlayMode.UIInteract;
-        if (!CheckShowLevelIntroduce())
-            StartLevel();
+        // if (SceneManager.GetActiveScene().buildIndex == 0 && !CheckShowLevelIntroduce())
+        StartLevel();
 
     }
     public void StartLevel()
@@ -211,7 +210,6 @@ public class GameMode : MonoBehaviour
     }
     IEnumerator LoadLevelCoroutine(float delay = 1f)
     {
-        print("delay" + delay + "S");
         yield return new WaitForSeconds(delay);
         LoadNextLevel();
     }
@@ -219,7 +217,9 @@ public class GameMode : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings - 1)
         {
+            //œ‘ æΩÈ…‹
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+          //  CheckShowLevelIntroduce();
         }
     }
     /// <summary>
@@ -249,7 +249,6 @@ public class GameMode : MonoBehaviour
     public bool CheckShowLevelIntroduce()
     {
         int curSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        print(levelFisrtlyEnter[curSceneIndex] + " " + (LevelIntroducer.Instance != null));
         if (!levelFisrtlyEnter[curSceneIndex] && LevelIntroducer.Instance != null)
         {
             levelFisrtlyEnter[curSceneIndex] = true;
