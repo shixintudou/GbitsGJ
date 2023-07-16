@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerAnimController : MonoBehaviour
 {
     // Start is called before the first frame update
-    Animator animator;
+    public Animator animator;
     PlayerHJ player;
     Rigidbody2D rb;
     void Start()
