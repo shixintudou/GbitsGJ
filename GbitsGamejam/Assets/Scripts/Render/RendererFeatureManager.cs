@@ -7,18 +7,33 @@ using UnityEngine.Rendering.Universal;
 public class RendererFeatureManager : MonoBehaviour
 {
     public ForwardRendererData rendererData;
+    public static RendererFeatureManager instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(this);
+        }
+    }
 
     void Start()
     {
         // ShakeForSeconds(1.0f);
-        ColorInvertForSeveralTimes(10);
+        //ColorInvertForSeveralTimes(10);
     }
 
     // 可调用函数
     // ShakeForSeconds : 屏幕晃动数秒
     // ColorInvertForSeveralTimes : 屏幕颜色反转多次
     // SetOldTVActive : 设置老电视效果是否激活
-    // TransitionForSeconds : 屏幕扰动+RGB转场数秒
+    // SetLineActive : 设置线条效果是否激活
+    // TransitionForSeconds(secs) : 屏幕扰动+RGB转场数秒
+    // TransitionForSeconds(secs, times) : 屏幕扰动+RGB转场secs秒，转场times次（用来改变转场速度）
 
     public void ShakeForSeconds(float seconds)
     {
@@ -54,15 +69,43 @@ public class RendererFeatureManager : MonoBehaviour
         rendererData.rendererFeatures[2].SetActive(value);
     }
 
-    public void TransitionForSeconds(float seconds)
+    public void SetLineActive(bool value)
     {
-        rendererData.rendererFeatures[3].SetActive(true);
-        StartCoroutine(TransitionForSecondsCoroutine(seconds));
+        rendererData.rendererFeatures[4].SetActive(value);
     }
 
+    bool bTransition = false;
+    TransitionRendererFeature transitionRendererFeature;
+    float curTime = 0;
+    float transitionTimes = 0;
+    float transitionSecends = 0f;
+    public void TransitionForSeconds(float seconds, float times)
+    {
+        transitionRendererFeature = (TransitionRendererFeature)rendererData.rendererFeatures[3];
+        curTime = Time.time;
+        transitionTimes = times;
+        transitionSecends = seconds;
+        rendererData.rendererFeatures[3].SetActive(true);
+        bTransition = true;
+        StartCoroutine(TransitionForSecondsCoroutine(seconds));
+    }
+    public void TransitionForSeconds(float seconds)
+    {
+        TransitionForSeconds(seconds, seconds);
+    }
     IEnumerator TransitionForSecondsCoroutine(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        rendererData.rendererFeatures[4].SetActive(false);
+        rendererData.rendererFeatures[3].SetActive(false);
+        bTransition = false;
     }
+    void Update()
+    {
+        if (bTransition)
+        {
+            transitionRendererFeature.settings.jumpProgress = (Time.time - curTime) * transitionTimes / transitionSecends;
+        }
+    }
+
+
 }

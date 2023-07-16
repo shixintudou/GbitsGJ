@@ -37,6 +37,7 @@ public class PlayerHJ : MonoBehaviour
         if (footTrans == null)
             print("Œ¥ªÒ»°playerfoot");
         ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
+        RendererFeatureManager.instance.SetOldTVActive(false);
     }
     void Update()
     {

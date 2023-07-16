@@ -1,0 +1,69 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Line
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+float4 _BufferSize;
+float _LineIntensity;
+float _VignetteIntensity;
+float _VignetteSmoothness;
+float _VignetteRoundness;
+int _UseGray;
+
+float _NoiseSpeed;
+float _NoiseFading;
+
+Texture2D _CameraColorTexture;
+RWTexture2D<float4> Result;
+
+SAMPLER(sampler_linear_clamp);
+
+float randomNoise(float2 c)
+{
+    return frac(sin(dot(c.xy, float2(12.9898, 78.233))) * 43758.5453);
+}
+
+float trunc(float x, float num_levels)
+{
+    return floor(x * num_levels) / num_levels;
+}
+
+float2 trunc(float2 x, float2 num_levels)
+{
+    return floor(x * num_levels) / num_levels;
+}
+
+[numthreads(8, 8, 1)]
+void Line(uint3 id : SV_DispatchThreadID)
+{
+    float2 resolution = _BufferSize.xy;
+    float2 invResolution = _BufferSize.zw;
+    float2 uv = (id.xy + 0.5) * invResolution;
+
+    half2 d = abs(uv - float2(0.5f, 0.5f)) * _VignetteIntensity;
+    d.x *= lerp(1.0, _BufferSize.x / _BufferSize.y, 0.0);
+    d = pow(saturate(d), _VignetteRoundness);
+    half vfactor = pow(saturate(1.0 - dot(d, d)), _VignetteSmoothness);
+
+    float4 sceneColor = _CameraColorTexture.SampleLevel(sampler_linear_clamp, uv, 0);
+    float luminance = dot(sceneColor.rgb, float3(0.22, 0.707, 0.071));
+    float4 grayColor = float4(luminance, luminance, luminance, 1);
+    sceneColor = lerp(sceneColor, grayColor, _UseGray);
+    float fracTime = 4.0 * (frac(0.5 * _Time.y) + 0.45);
+
+    // 生成随机强度梯度线条
+    float truncTime = trunc(fracTime, 4.0);
+    float uv_trunc = randomNoise(0.1 * trunc(uv.xx, float2(128, 128)) + 0.1 * truncTime * trunc(uv.xx, resolution * 0.4));
+    float uv_randomTrunc = saturate(4.0 * trunc(fracTime, 24.0 * uv_trunc));
+    uv_randomTrunc *= -1;
+    uv_randomTrunc += step(uv_trunc, 0.5);
+    sceneColor -= saturate(float4(uv_randomTrunc, uv_randomTrunc, uv_randomTrunc, 1.0) * _LineIntensity);
+
+    sceneColor.rgb *= lerp(0.0, 1.0, vfactor);
+    sceneColor.a = lerp(1.0, sceneColor.a, vfactor);
+
+    Result[id.xy] = sceneColor;
+}
+

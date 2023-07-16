@@ -6,7 +6,7 @@ public class LaganController : BasePick
 {
     // Start is called before the first frame update
     public FlatBase controlledFlat;
-    Animator animator;
+    protected Animator animator;
     void Start()
     {
         animator = GetComponent<Animator>();
