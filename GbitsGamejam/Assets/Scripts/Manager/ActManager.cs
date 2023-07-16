@@ -48,4 +48,20 @@ public class ActManager : MonoBehaviour
         }
         //yield return new WaitForSeconds(actTime);
     }
+    public IEnumerator ActMoveCoroutine(float time,int x=1,string sceneName="")
+    {
+        float t = 0f;
+        playerAnimController.animator.SetBool("ActMove", true);
+        playerAnimController.animator.SetBool("ActMode", true);
+        while (t < time)
+        {
+            t += Time.deltaTime;
+            player.transform.position += x * Vector3.right * Time.deltaTime * actMoveSpeed;
+            yield return null;
+        }
+        if (sceneName!="")
+        {
+            SceneManager.LoadScene(sceneName);
+        }
+    }
 }

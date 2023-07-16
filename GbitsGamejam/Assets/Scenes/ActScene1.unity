@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: 1593401619}
   - component: {fileID: 1593401621}
   - component: {fileID: 1593401620}
+  - component: {fileID: 1593401622}
   m_Layer: 0
   m_Name: ActManager
   m_TagString: Untagged
@@ -339,7 +340,6 @@ MonoBehaviour:
   IfTouchTransport: 0
   TimeSectionNum: 0
   DefaultBornPos: {x: 0, y: 0, z: 0}
-  playerPrefabName: Player
 --- !u!114 &1593401621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,6 +354,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actMoveSpeed: 3
   actTime: 3
+--- !u!114 &1593401622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593401618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4676921cecb85e44b857a224ac78ec3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rendererData: {fileID: 11400000, guid: 34d916d42f1edfe4ca11f5d551ec3bae, type: 2}
 --- !u!1001 &2114515452
 PrefabInstance:
   m_ObjectHideFlags: 0
