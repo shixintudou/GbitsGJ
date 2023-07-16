@@ -8,7 +8,7 @@
 float4 _BufferSize;
 float _ShakeIntensity;
 
-
+float _JumpProgress;
 
 Texture2D _CameraColorTexture;
 Texture2D _NoiseTex;
@@ -51,11 +51,11 @@ void Transition(uint3 id : SV_DispatchThreadID)
     float jitter = randomNoise(uv.y, _Time.x) * 2 - 1;
 
     jitter *= step(_Threshold, abs(jitter)) * _Amount * strength;
-    
+
     float4 splitAmount = Pow4(Noise(float2(_BlockSpeed * _Time.y, 2.0 * _BlockSpeed * _Time.y / 25.0)), 8.0) * float4(_BlockAmplitude, _BlockAmplitude, _BlockAmplitude, 1.0);
     splitAmount = lerp(0.0, splitAmount, _RGB_Scale);
     float4 sceneColor = _CameraColorTexture.SampleLevel(sampler_linear_clamp, frac(uv + float2(jitter, 0)), 0);
-    uv = frac(uv + float2(jitter, 0));
+    uv = frac(uv + float2(jitter, _JumpProgress));
 
     float colorR = _CameraColorTexture.SampleLevel(sampler_linear_clamp, (uv + float2(splitAmount.x, -splitAmount.y)), 0).r;
     float colorG = _CameraColorTexture.SampleLevel(sampler_linear_clamp, (uv + float2(splitAmount.y, -splitAmount.z)), 0).g;

@@ -25,16 +25,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78917d711a5f7844586328de3ba366b6, type: 3}
-  m_Name: NewTransitionRendererFeature
+  m_Name: Transition
   m_EditorClassIdentifier: 
   m_Active: 0
   settings:
     computeShader: {fileID: 7200000, guid: b299fdfcc2e59014fae8208a127e04e2, type: 3}
-    frequency: 6.5
-    jitterIndensity: 0.66
-    rgbScale: 0.854
+    frequency: 8
+    jitterIndensity: 0.689
+    rgbScale: 0.597
     blockSpeed: 0.481
     blockAmplitude: 0.095
+    jumpProgress: 5.0060506
     noiseTex: {fileID: 2800000, guid: 5876b3d37d9adec4da3282c434f8ebf4, type: 3}
 --- !u!114 &-4655093591777948665
 MonoBehaviour:
@@ -51,11 +52,32 @@ MonoBehaviour:
   m_Active: 0
   settings:
     computeShader: {fileID: 7200000, guid: 8a68e9779969b614f86531f784bcdd46, type: 3}
+    oldTVMode: 0
     OldTVIntensity: 1
     smoothness: 1
     roundness: 1
     noiseSpeed: 0.9
     noiseFading: 0.8
+--- !u!114 &-880165643050157765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 053a8a52ff5afca4e81431611c16f8ff, type: 3}
+  m_Name: NewLineRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    computeShader: {fileID: 7200000, guid: 04d3a4156dc6f3b4b8c206b62e4d47db, type: 3}
+    useGray: 0
+    LineIntensity: 0.075
+    VignetteIntensity: 1
+    VignetteSmoothness: 1
+    VignetteRoundness: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,7 +95,8 @@ MonoBehaviour:
   - {fileID: -7458570192170730315}
   - {fileID: -4655093591777948665}
   - {fileID: -6147390373251644286}
-  m_RendererFeatureMap: 40318eee24e6837eb5bc586bedd57d9807cce0c10ac965bf8204ae9a0615b0aa
+  - {fileID: -880165643050157765}
+  m_RendererFeatureMap: 40318eee24e6837eb5bc586bedd57d9807cce0c10ac965bf8204ae9a0615b0aa3bf97dce0206c9f3
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:

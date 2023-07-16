@@ -1,5 +1,6 @@
 // Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel OldTV
+#pragma kernel OldTV2
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
@@ -52,3 +53,38 @@ void OldTV(uint3 id : SV_DispatchThreadID)
 
     Result[id.xy] = sceneColor;
 }
+
+float trunc(float x, float num_levels)
+{
+    return floor(x * num_levels) / num_levels;
+}
+
+float2 trunc(float2 x, float2 num_levels)
+{
+    return floor(x * num_levels) / num_levels;
+}
+
+[numthreads(8, 8, 1)]
+void OldTV2(uint3 id : SV_DispatchThreadID)
+{
+    float2 resolution = _BufferSize.xy;
+    float2 invResolution = _BufferSize.zw;
+    float2 uv = (id.xy + 0.5) * invResolution;
+
+    float4 sceneColor = _CameraColorTexture.SampleLevel(sampler_linear_clamp, uv, 0);
+    float luminance = dot(sceneColor.rgb, float3(0.22, 0.707, 0.071));
+    float4 grayColor = float4(luminance, luminance, luminance, 1);
+
+    float fracTime = 4.0 * (frac(0.5 * _Time.y) + 0.45);
+
+    // 生成随机强度梯度线条
+    float truncTime = trunc(fracTime, 4.0);
+    float uv_trunc = randomNoise(0.1 * trunc(uv.xx, float2(128, 128)) + 0.1 * truncTime * trunc(uv.xx, resolution * 0.4));
+    float uv_randomTrunc = saturate(4.0 * trunc(fracTime, 24.0 * uv_trunc));
+    uv_randomTrunc *= -1;
+    uv_randomTrunc += step(uv_trunc, 0.5) - 0.5;
+    grayColor -= saturate(float4(uv_randomTrunc, uv_randomTrunc, uv_randomTrunc, 1.0) * _OldTVIntensity);
+
+    Result[id.xy] = grayColor;
+}
+
