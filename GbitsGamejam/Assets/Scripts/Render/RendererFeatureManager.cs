@@ -24,7 +24,7 @@ public class RendererFeatureManager : MonoBehaviour
     void Start()
     {
         // ShakeForSeconds(1.0f);
-        //ColorInvertForSeveralTimes(10);
+        TransitionForSeconds(1);
     }
 
     // 可调用函数
@@ -74,6 +74,12 @@ public class RendererFeatureManager : MonoBehaviour
         rendererData.rendererFeatures[4].SetActive(value);
     }
 
+    public void TransitionForSeconds(float seconds)
+    {
+        rendererData.rendererFeatures[3].SetActive(true);
+        StartCoroutine(TransitionForSecondsCoroutine(seconds));
+    }
+
     bool bTransition = false;
     TransitionRendererFeature transitionRendererFeature;
     float curTime = 0;
@@ -89,10 +95,11 @@ public class RendererFeatureManager : MonoBehaviour
         bTransition = true;
         StartCoroutine(TransitionForSecondsCoroutine(seconds));
     }
-    public void TransitionForSeconds(float seconds)
-    {
-        TransitionForSeconds(seconds, seconds);
-    }
+    // public void TransitionForSeconds(float seconds)
+    // {
+    //     TransitionForSeconds(seconds, seconds);
+    // }
+
     IEnumerator TransitionForSecondsCoroutine(float seconds)
     {
         yield return new WaitForSeconds(seconds);
