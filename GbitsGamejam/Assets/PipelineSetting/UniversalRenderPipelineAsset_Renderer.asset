@@ -30,8 +30,8 @@ MonoBehaviour:
   m_Active: 0
   settings:
     computeShader: {fileID: 7200000, guid: b299fdfcc2e59014fae8208a127e04e2, type: 3}
-    frequency: 8
-    jitterIndensity: 0.689
+    frequency: 11.6
+    jitterIndensity: 0.699
     rgbScale: 0.513
     blockSpeed: 0.481
     blockAmplitude: 0.095
@@ -70,11 +70,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 053a8a52ff5afca4e81431611c16f8ff, type: 3}
   m_Name: NewLineRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     computeShader: {fileID: 7200000, guid: 04d3a4156dc6f3b4b8c206b62e4d47db, type: 3}
+    lineMode: 0
     useGray: 0
-    LineIntensity: 0.075
+    LineIntensity: 0.086
+    frequncy: 10
+    noiseTextureWidth: 16
+    noiseTextureHeight: 174
+    stripeLength: 0.87
+    HorizontalIndensity: 0.08
+    StripColorAdjustIndensity: 0.348
+    StripColorAdjustColor: 0.352
+    NoiseTexture: {fileID: 2800000, guid: 5876b3d37d9adec4da3282c434f8ebf4, type: 3}
     VignetteIntensity: 1
     VignetteSmoothness: 1
     VignetteRoundness: 1
