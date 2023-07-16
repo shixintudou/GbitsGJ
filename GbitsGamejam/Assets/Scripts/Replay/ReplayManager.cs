@@ -28,10 +28,14 @@ public class ReplayManager : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(this);
+        }
+            
         else if (instance != this)
             Destroy(this);
-        DontDestroyOnLoad(this);
+        
     }
     public void SetDataNum(int num)
     {
@@ -47,6 +51,7 @@ public class ReplayManager : MonoBehaviour
         PlayerHJ player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHJ>();
         player.transform.position = startPos;
         player.rb.velocity = Vector2.zero;
+        RendererFeatureManager.instance.SetOldTVActive(true);
         if (replayCoroutine != null)
         {
             StopCoroutine(replayCoroutine);
@@ -67,6 +72,7 @@ public class ReplayManager : MonoBehaviour
             yield return new WaitForSeconds(time);
         }
         GameMode.Instance.SetGameMode(GamePlayMode.Play);
+        RendererFeatureManager.instance.SetOldTVActive(false);
     }
     IEnumerator ReplayClip(PlayerHJ player, float time, PlayData data)
     {
@@ -80,10 +86,14 @@ public class ReplayManager : MonoBehaviour
         {
             if (jumpIndex < jumpTimes.Count)
             {
-                if (jumpTimes[jumpIndex] <= t+0.5f)
+                if (jumpTimes[jumpIndex] <= t+0.2f)
                 {
                     if (player)
+                    {
+                        player.rb.velocity = new Vector2(player.rb.velocity.x, 0);
                         player.Jump();
+                    }
+                        
                     jumpIndex++;
                 }
             }

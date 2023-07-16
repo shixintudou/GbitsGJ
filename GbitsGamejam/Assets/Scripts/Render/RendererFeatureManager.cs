@@ -7,11 +7,24 @@ using UnityEngine.Rendering.Universal;
 public class RendererFeatureManager : MonoBehaviour
 {
     public ForwardRendererData rendererData;
+    public static RendererFeatureManager instance;
+
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else if(instance!=this)
+        {
+            Destroy(this);
+        }
+    }
 
     void Start()
     {
         // ShakeForSeconds(1.0f);
-        ColorInvertForSeveralTimes(10);
+        //ColorInvertForSeveralTimes(10);
     }
 
     // 可调用函数

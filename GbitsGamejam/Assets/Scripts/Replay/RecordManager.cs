@@ -13,10 +13,14 @@ public class RecordManager : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(this);
+        }
+            
         else if (instance != this)
             Destroy(this);
-        DontDestroyOnLoad(this);
+        
     }
     // Start is called before the first frame update
     void Start()

@@ -58,6 +58,7 @@ public class GameMode : MonoBehaviour
     }
     void Start()
     {
+        gamePlayMode = GamePlayMode.Play;
         //µ¥Àý
         if (instance != this)
         {
