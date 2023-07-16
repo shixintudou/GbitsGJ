@@ -51,7 +51,7 @@ public class PlayerHJ : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        
+
     }
     public void ControlMoveMentUpdate()
     {
@@ -66,7 +66,7 @@ public class PlayerHJ : MonoBehaviour
     {
         rb.velocity = new Vector2(rb.velocity.x, jumpforce);
         nowJumpTimes++;
-        if(RecordManager.instance.startRecord)
+        if (RecordManager.instance.startRecord)
         {
             RecordManager.instance.AddJumpTimes();
         }
@@ -94,16 +94,16 @@ public class PlayerHJ : MonoBehaviour
         }
         rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, y);
     }
-    public void MoveWithTargetAndTime(float target,float time)
+    public void MoveWithTargetAndTime(float target, float time)
     {
-        if(moveCoroutine!=null)
+        if (moveCoroutine != null)
         {
             StopCoroutine(moveCoroutine);
         }
         moveCoroutine = StartCoroutine(MoveCoroutine(target, time));
         transform.localScale = new Vector3(target > 0 ? -1 : 1, 1, 1);
     }
-    
+
     public void Pick()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -126,7 +126,19 @@ public class PlayerHJ : MonoBehaviour
     public void Dead()
     {
         print("dead");
-        dead = true;        
+        if (!dead)
+        {
+            dead = true;
+            var Body = Instantiate(ResoucesManager.Instance.Resouces["PlayerBody"], this.transform.position, Quaternion.identity);
+            Body.transform.rotation = Quaternion.Euler(0, 0, 90f);
+            GameMode.Instance.timeSectionManager.EndSection();
+            GameMode.Instance.playerDeathSection = GameMode.Instance.timeSectionManager.NowTimeSection;
+            Destroy(this.gameObject);
+        }
+    }
+    public void SetVisible(bool visible)
+    {
+        GetComponent<SpriteRenderer>().enabled = visible;
     }
     public bool CheckIsOnGround()
     {
@@ -137,7 +149,7 @@ public class PlayerHJ : MonoBehaviour
     IEnumerator MoveCoroutine(float target, float time)
     {
         float t = 0;
-        while(t<time)
+        while (t < time)
         {
             rb.velocity = new Vector2(target * moveSpeed, rb.velocity.y);
             t += Time.deltaTime;
