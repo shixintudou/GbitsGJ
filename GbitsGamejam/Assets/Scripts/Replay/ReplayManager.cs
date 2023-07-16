@@ -66,6 +66,7 @@ public class ReplayManager : MonoBehaviour
             float time = data.horizonData[data.horizonData.Count - 1].endTime;
             if (data.lagan != null)
             {
+                GameMode.Instance.m_UIManager.CanvasFadeInAndOut();
                 data.lagan.controlledFlat.FlatDisable();
             }
             StartCoroutine(ReplayClip(player, time, data));
