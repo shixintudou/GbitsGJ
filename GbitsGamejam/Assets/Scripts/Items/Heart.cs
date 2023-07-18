@@ -8,6 +8,9 @@ public class Heart : BasePick
     float len = 0.5f;
     Vector2 startPos;
     public GameObject film;
+    public float intensity;
+    public GameObject ground;
+    public GameObject group;
     void Start()
     {
         RendererFeatureManager.instance.SetLineActive(true);
@@ -24,7 +27,9 @@ public class Heart : BasePick
         base.BePicked();
         film.SetActive(false);
         RendererFeatureManager.instance.SetLineActive(false);
-        RendererFeatureManager.instance.ShakeForSeconds(0.5f);
+        RendererFeatureManager.instance.ShakeForSecondsWithIntensity(0.5f, intensity);
+        ground.GetComponent<SpriteRenderer>().enabled = false;
+        Flower();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -32,8 +37,20 @@ public class Heart : BasePick
         {
             BePicked();
             collision.GetComponent<Animator>().SetBool("Heart", true);
-            ActManager.instance.StartCoroutine(ActManager.instance.ActMoveCoroutine(5f, 1, "ActScene3"));
-            Destroy(gameObject);
+            StartCoroutine(PickCoroutine());
+            GetComponent<SpriteRenderer>().enabled = false;
         }
     }
+    public void Flower()
+    {
+        group.SetActive(true);
+        
+    }
+    IEnumerator PickCoroutine()
+    {
+        yield return new WaitForSeconds(3f);
+        ActManager.instance.StartCoroutine(ActManager.instance.ActMoveCoroutine(5f, 1, "ActScene3"));
+        Destroy(gameObject);
+    }
+
 }

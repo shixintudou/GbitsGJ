@@ -18,6 +18,7 @@ public class PlayerHJ : MonoBehaviour
 
     int nowJumpTimes = 0;
     bool isOnGround = true;
+    public GameObject canvas;
 
     [SerializeField]
     private float pickRange;
@@ -138,6 +139,10 @@ public class PlayerHJ : MonoBehaviour
         print("dead");
         if (!dead)
         {
+            if(SceneManager.GetActiveScene().name.Contains("ActScene"))
+            {
+                canvas.SetActive(true);
+            }
             dead = true;
             var Body = Instantiate(ResoucesManager.Instance.Resouces["PlayerBody"], this.transform.position, Quaternion.identity);
             Body.transform.rotation = Quaternion.Euler(0, 0, 90f);

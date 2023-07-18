@@ -48,7 +48,7 @@ public class GameMode : MonoBehaviour
 
     public PlayerHJ Player
     {
-        get =>
+        get => 
            GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>();
     }
 
@@ -77,12 +77,14 @@ public class GameMode : MonoBehaviour
         playerPrefabName = Player.name.Replace("Clone", "");
 
         //临时设置
-        if (ReplayManager.instance)
+        if (ReplayManager.instance != null)
         {
             ReplayManager.instance.IsReadyForLoadNextScene = false;
             ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
         }
+        
 
+        print("静态初始化" + (levelFisrtlyEnter == null));
         if (levelFisrtlyEnter == null)
         {
             levelFisrtlyEnter = new List<bool>();
@@ -218,6 +220,7 @@ public class GameMode : MonoBehaviour
     }
     IEnumerator LoadLevelCoroutine(float delay = 1f)
     {
+        print("delay" + delay + "S");
         yield return new WaitForSeconds(delay);
         LoadNextLevel();
     }
@@ -229,8 +232,7 @@ public class GameMode : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings - 1)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-
-        }
+       }
     }
 
     /// <summary>
@@ -262,6 +264,7 @@ public class GameMode : MonoBehaviour
     public bool CheckShowLevelIntroduce(bool IfLoadNextLevel = true)
     {
         int curSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        print(levelFisrtlyEnter[curSceneIndex] + " " + (LevelIntroducer.Instance != null));
         if (!levelFisrtlyEnter[curSceneIndex] && LevelIntroducer.Instance != null)
         {
             levelFisrtlyEnter[curSceneIndex] = true;

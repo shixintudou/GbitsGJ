@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ActScene2.unity
     guid: 407de020a33a1e54f9ac03942bd1caad
+  - enabled: 1
+    path: Assets/Scenes/ActScene3.unity
+    guid: e8323c630be466b4891a6d8a048f1d64
   m_configObjects: {}
