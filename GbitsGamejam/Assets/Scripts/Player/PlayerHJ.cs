@@ -139,18 +139,23 @@ public class PlayerHJ : MonoBehaviour
         print("dead");
         if (!dead)
         {
-            if(SceneManager.GetActiveScene().name.Contains("ActScene"))
+            if (SceneManager.GetActiveScene().name.Contains("ActScene"))
             {
                 canvas.SetActive(true);
             }
             dead = true;
             var Body = Instantiate(ResoucesManager.Instance.Resouces["PlayerBody"], this.transform.position, Quaternion.identity);
             Body.transform.rotation = Quaternion.Euler(0, 0, 90f);
-            GameMode.Instance.m_UIManager.ShowTip("时间段" + GameMode.Instance.timeSectionManager.NowTimeSection + "已结束");
+
             //震屏效果
-            RendererFeatureManager.instance.ShakeForSeconds(0.1f);
-            GameMode.Instance.timeSectionManager.EndSection();
-            GameMode.Instance.playerDeathSection = GameMode.Instance.timeSectionManager.NowTimeSection;
+            RendererFeatureManager.instance?.ShakeForSeconds(0.1f);
+            if (GameMode.Instance && GameMode.Instance.timeSectionManager)
+            {
+                if (GameMode.GamePlayMode == GamePlayMode.Play)
+                    GameMode.Instance.m_UIManager.ShowTip("时间段" + GameMode.Instance.timeSectionManager?.NowTimeSection + "已结束");
+                GameMode.Instance.timeSectionManager?.EndSection();
+                GameMode.Instance.playerDeathSection = GameMode.Instance.timeSectionManager.NowTimeSection;
+            }
             Destroy(this.gameObject);
         }
     }

@@ -91,7 +91,6 @@ public class TimeSectionManager : MonoBehaviour
                // return;
             }
         }
-        print("选择时间段" + number);
         //选择的时间段已开始过
         if (timeSectionsDataList[number - 1].ifStarted)
         {
@@ -145,6 +144,7 @@ public class TimeSectionManager : MonoBehaviour
     }
     void StartedChoosingNewBornPosition()
     {
+        GameMode.Instance?.m_UIManager.ShowTip("请点击屏幕以选择你出现的位置");
         isSelectingPosition = true;
         DarkCanvas.SetActive(true);
         GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);

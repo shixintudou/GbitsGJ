@@ -48,7 +48,7 @@ public class GameMode : MonoBehaviour
 
     public PlayerHJ Player
     {
-        get => 
+        get =>
            GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>();
     }
 
@@ -82,9 +82,8 @@ public class GameMode : MonoBehaviour
             ReplayManager.instance.IsReadyForLoadNextScene = false;
             ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
         }
-        
 
-        print("æ≤Ã¨≥ı ºªØ" + (levelFisrtlyEnter == null));
+
         if (levelFisrtlyEnter == null)
         {
             levelFisrtlyEnter = new List<bool>();
@@ -170,7 +169,8 @@ public class GameMode : MonoBehaviour
         {
             if (gamePlayMode != GamePlayMode.Replay)
             {
-                ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && IfTouchTransport;
+                if (timeSectionManager)
+                    ifPass = timeSectionManager.GetNowLogicBugNum() == 0 && IfTouchTransport;
                 if (ifPass)
                 {
                     OnSuccessPassed();
@@ -232,7 +232,7 @@ public class GameMode : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings - 1)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-       }
+        }
     }
 
     /// <summary>
