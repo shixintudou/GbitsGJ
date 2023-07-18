@@ -47,6 +47,12 @@ public class ReplayManager : MonoBehaviour
             datas.Add(new PlayData());
         }
     }
+
+    public void SkipReplay()
+    {
+        StopAllCoroutines();
+        GameMode.Instance.LoadNextLevel();
+    }
     public void StartReplay(Vector2 startPos)
     {
         endReplay = false;

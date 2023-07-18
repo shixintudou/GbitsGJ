@@ -6,7 +6,6 @@ public class PlayerHJ_D : PlayerHJ
 {
     public override void Dead()
     {
-        print("dead"+dead);
         if (!dead&&GameMode.GamePlayMode!=GamePlayMode.Replay)
         {
             dead = true;

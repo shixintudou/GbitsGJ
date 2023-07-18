@@ -21,6 +21,7 @@ public class TimeSectionData
 public class TimeSectionManager : MonoBehaviour
 {
     public GameObject DarkCanvas;
+    public GameObject SkillReplayButton;
 
     List<TimeSectionData> timeSectionsDataList = new List<TimeSectionData>();
     public List<TimeSectionData> TimeSectionsDataList { get => timeSectionsDataList; }
@@ -84,8 +85,10 @@ public class TimeSectionManager : MonoBehaviour
             }
             if (nowSectionData.ifStarted && !nowSectionData.ifEnded && NowTimeSection != 0)
             {
-                GameMode.Instance.m_UIManager.ShowTip("请先结束当前时间段!");
-                return;
+                FinishThisTimeSection(); //自动结束当前时间段
+
+               // GameMode.Instance.m_UIManager.ShowTip("请先结束当前时间段!");
+               // return;
             }
         }
         print("选择时间段" + number);
@@ -136,7 +139,7 @@ public class TimeSectionManager : MonoBehaviour
     }
     bool CheckIfPosSelectValid(Vector2 screenPos)
     {
-        if (Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(screenPos), 0.5f))
+        if (Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(screenPos), 0.25f))
             return false;
         return true;
     }
@@ -181,7 +184,7 @@ public class TimeSectionManager : MonoBehaviour
                 EndSection();
                 GameMode.Instance.SetGameMode(GamePlayMode.UIInteract);
             }
-            GameMode.Instance.m_UIManager.ShowTip("时间段已结束");
+            GameMode.Instance.m_UIManager.ShowTip("时间段" + nowTimeSection + "已结束");
         }
         else if (NowTimeSection == 0)
         {
@@ -206,7 +209,7 @@ public class TimeSectionManager : MonoBehaviour
                     break;
                 }
             if (ifAllSectionEnded)
-                GameMode.Instance.m_UIManager.ShowLongTip("似乎已无法继续游戏，请重试");
+                GameMode.Instance.m_UIManager.ShowLongTip("似乎已无法继续游戏，请按下R键重试");
             else
                 GameMode.Instance.m_UIManager.ShowTip("当前时间段已结束");
         }
@@ -217,7 +220,7 @@ public class TimeSectionManager : MonoBehaviour
         //开始记录
         if (nowTimeSection > 0)
             timeSectionsDataList[nowTimeSection - 1].ifStarted = true;
-      //  print("时间段" + nowTimeSection + "开始录制");
+        //  print("时间段" + nowTimeSection + "开始录制");
         RecordManager.instance.StartRecord(nowTimeSection - 1);
     }
     public void EndSection()
@@ -225,7 +228,7 @@ public class TimeSectionManager : MonoBehaviour
         //结束记录
         if (nowTimeSection > 0)
             timeSectionsDataList[NowTimeSection - 1].ifEnded = true;
-       // print("时间段" + nowTimeSection + "结束录制");
+        // print("时间段" + nowTimeSection + "结束录制");
         RecordManager.instance.endRecord = true;
     }
 
@@ -236,12 +239,13 @@ public class TimeSectionManager : MonoBehaviour
             timeSectionsDataList.Add(new TimeSectionData(button));
         }
     }
-
-    public void ResetThisSection()
+    
+    public void SwitchSkillReplayButton(bool Open)
     {
-        var data = timeSectionsDataList[NowTimeSection];
-        data.ifEnded = false;
-        nowBugsNum = 0;
+        if (SkillReplayButton)
+        {
+            SkillReplayButton.SetActive(Open);
+        }
     }
 
     public TimeSectionData GetCurSectionData()

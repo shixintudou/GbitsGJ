@@ -36,8 +36,8 @@ public class PlayerHJ : MonoBehaviour
         footTrans = transform.Find("foot");
         if (footTrans == null)
             print("未获取playerfoot");
-        
-        if(SceneManager.GetActiveScene().name.Contains("ActScene"))
+
+        if (SceneManager.GetActiveScene().name.Contains("ActScene"))
         {
             GameMode.Instance.SetGameMode(GamePlayMode.Act);
             StartCoroutine(ActCoroutine());
@@ -110,8 +110,8 @@ public class PlayerHJ : MonoBehaviour
             StopCoroutine(moveCoroutine);
         }
         moveCoroutine = StartCoroutine(MoveCoroutine(target, time));
-        if(GameMode.GamePlayMode!=GamePlayMode.Act)
-        transform.localScale = new Vector3(target > 0 ? -1 : 1, 1, 1);
+        if (GameMode.GamePlayMode != GamePlayMode.Act)
+            transform.localScale = new Vector3(target > 0 ? -1 : 1, 1, 1);
     }
 
     public void Pick()
@@ -141,7 +141,8 @@ public class PlayerHJ : MonoBehaviour
             dead = true;
             var Body = Instantiate(ResoucesManager.Instance.Resouces["PlayerBody"], this.transform.position, Quaternion.identity);
             Body.transform.rotation = Quaternion.Euler(0, 0, 90f);
-            //转场效果
+            GameMode.Instance.m_UIManager.ShowTip("时间段" + GameMode.Instance.timeSectionManager.NowTimeSection + "已结束");
+            //震屏效果
             RendererFeatureManager.instance.ShakeForSeconds(0.1f);
             GameMode.Instance.timeSectionManager.EndSection();
             GameMode.Instance.playerDeathSection = GameMode.Instance.timeSectionManager.NowTimeSection;

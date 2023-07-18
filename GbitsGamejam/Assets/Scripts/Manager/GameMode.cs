@@ -77,8 +77,11 @@ public class GameMode : MonoBehaviour
         playerPrefabName = Player.name.Replace("Clone", "");
 
         //临时设置
-        ReplayManager.instance.IsReadyForLoadNextScene = false;
-        ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
+        if (ReplayManager.instance)
+        {
+            ReplayManager.instance.IsReadyForLoadNextScene = false;
+            ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
+        }
 
         if (levelFisrtlyEnter == null)
         {
@@ -97,8 +100,9 @@ public class GameMode : MonoBehaviour
             m_UIManager = gameObject.AddComponent<LUIManager>();
 
         gamePlayMode = GamePlayMode.UIInteract;
-        // if (SceneManager.GetActiveScene().buildIndex == 0 && !CheckShowLevelIntroduce())
-        StartLevel();
+        //是关卡关，显示关卡开始的提示
+        if (SceneManager.GetActiveScene().name.ToLower().Contains("level"))
+            StartLevel();
 
     }
     public void StartLevel()
@@ -129,19 +133,23 @@ public class GameMode : MonoBehaviour
             {
                 Time.timeScale = 0;
                 if (Player)
-                {
                     Player.rb.velocity = Vector2.zero;
-                }
             }
             else
             {
                 Time.timeScale = 1;
                 if (Player)
-                {
-                    // Player.SetVisible(true);
                     Player.rb.velocity = Vector2.zero;
-                }
             }
+
+            if (timeSectionManager)
+            {
+                if (playMode == GamePlayMode.Replay)
+                    timeSectionManager.SwitchSkillReplayButton(true);
+                else
+                    timeSectionManager.SwitchSkillReplayButton(false);
+            }
+
 
         }
     }
@@ -183,7 +191,7 @@ public class GameMode : MonoBehaviour
             StartCoroutine(ReplayCoroutine());
         }
         else
-            StartCoroutine(LoadLevelCoroutine(1.2f));
+            StartCoroutine(LoadLevelCoroutine());
     }
     IEnumerator ReplayCoroutine()
     {
@@ -213,15 +221,18 @@ public class GameMode : MonoBehaviour
         yield return new WaitForSeconds(delay);
         LoadNextLevel();
     }
+    /// <summary>
+    /// 立即加载下一关
+    /// </summary>
     public void LoadNextLevel()
     {
         if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings - 1)
         {
-            //显示介绍
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-          //  CheckShowLevelIntroduce();
+
         }
     }
+
     /// <summary>
     /// 当玩家接触到逻辑漏洞
     /// </summary>
@@ -243,17 +254,19 @@ public class GameMode : MonoBehaviour
             player.transform.position = postion;
     }
 
-    public void SwitchCursorImage(bool IfHandmode)
+    /// <summary>
+    /// 废案，未采用
+    /// </summary>
+    /// <param name="IfLoadNextLevel"></param>
+    /// <returns></returns>
+    public bool CheckShowLevelIntroduce(bool IfLoadNextLevel = true)
     {
-    }
-    public bool CheckShowLevelIntroduce()
-    {
-        int curSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int curSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
         if (!levelFisrtlyEnter[curSceneIndex] && LevelIntroducer.Instance != null)
         {
             levelFisrtlyEnter[curSceneIndex] = true;
             //显示介绍
-            LevelIntroducer.Instance.SetIntroduceImageAndEnable(SceneManager.GetActiveScene().buildIndex);
+            LevelIntroducer.Instance.SetIntroduceImageAndEnable(SceneManager.GetActiveScene().buildIndex, IfLoadNextLevel);
             return true;
         }
         return false;
@@ -262,4 +275,5 @@ public class GameMode : MonoBehaviour
     {
         return gamePlayMode != GamePlayMode.UIInteract;
     }
+
 }
