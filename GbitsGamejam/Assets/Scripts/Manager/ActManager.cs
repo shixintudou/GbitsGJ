@@ -27,6 +27,7 @@ public class ActManager : MonoBehaviour
         {
             RendererFeatureManager.instance.SetLineActive(false);
         }
+        RendererFeatureManager.instance.SetOldTVActive(false);
     }
     public void StartAct()
     {
