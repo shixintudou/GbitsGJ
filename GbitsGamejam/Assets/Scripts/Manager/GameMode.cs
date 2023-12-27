@@ -25,14 +25,13 @@ public class GameMode : MonoBehaviour
 
     [Header("过关数据")]
     bool ifPass;
+    public bool IfPass { get => ifPass; }
     bool IfStartLevel;
     [HideInInspector]
     public int playerDeathSection = -1;
     [HideInInspector]
     public bool IfTouchTransport;
-    public static List<bool> levelFisrtlyEnter;//记录每个关卡是否第一次进入
-    public bool IfPass { get => ifPass; }
-
+    public static Dictionary<int, bool> IfFirstEnterMap;
 
     [Header("关卡配置")]
     public int TimeSectionNum;
@@ -40,23 +39,45 @@ public class GameMode : MonoBehaviour
     public Vector3 DefaultBornPos;
     string playerPrefabName = "Player";
 
-    //0为自由状态 1-N分别为选中了第N段可分配时间段
-
 
     private static GamePlayMode gamePlayMode;
     public static GamePlayMode GamePlayMode { get => gamePlayMode; }
 
+    private PlayerHJ m_player;
     public PlayerHJ Player
     {
-        get =>
-           GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHJ>();
+        get
+        {
+            if (m_player == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+                m_player = playerObject ? playerObject.GetComponent<PlayerHJ>() : null;
+            }
+            return m_player;
+        }
     }
 
+    public delegate void Func_NoParam();
 
     private void Awake()
     {
         if (instance == null)
         {
+            print("初始化GameModeManager");
+            if (IfFirstEnterMap == null || IfFirstEnterMap.Count == 0)
+            {
+                //初始化是否首次进入场景的记录
+                IfFirstEnterMap = new Dictionary<int, bool>();
+                int sceneCount = SceneManager.sceneCountInBuildSettings;
+                for (int i = 0; i < sceneCount; i++)
+                {
+                    Scene scene = SceneManager.GetSceneByBuildIndex(i);
+                    if (scene != null)
+                    {
+                        IfFirstEnterMap.Add(i, false);
+                    }
+                }
+            }
             instance = this;
         }
         else if (instance != this)
@@ -69,8 +90,8 @@ public class GameMode : MonoBehaviour
         //单例
         if (instance != this)
         {
-            Destroy(instance);
             instance = this;
+            Destroy(instance);
         }
         //记录玩家出生位置
         DefaultBornPos = Player.transform.position;
@@ -83,35 +104,50 @@ public class GameMode : MonoBehaviour
             ReplayManager.instance.SetDataNum(GameMode.Instance.TimeSectionNum);
         }
 
-
-        if (levelFisrtlyEnter == null)
-        {
-            levelFisrtlyEnter = new List<bool>();
-            for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
-                levelFisrtlyEnter.Add(false);
-        }
-
         //获取场景中时间轴组件
         timeSectionManager = FindObjectOfType<TimeSectionManager>();
         if (timeSectionManager == null)
             print("场景中缺少TimeSectionManager!");
 
+        //获取/生成uimanager组件
         m_UIManager = GetComponent<LUIManager>();
         if (m_UIManager == null)
             m_UIManager = gameObject.AddComponent<LUIManager>();
 
-        gamePlayMode = GamePlayMode.UIInteract;
-        //是关卡关，显示关卡开始的提示
-        if (SceneManager.GetActiveScene().name.ToLower().Contains("level"))
-            StartLevel();
+        //准备开始关卡
+        CheckShowLevelIntroduce();
+    }
 
+    /// <summary>
+    /// 检查关卡前置流程
+    /// </summary>
+    /// <param name="IfLoadNextLevel"></param>
+    /// <returns></returns>
+    public bool CheckShowLevelIntroduce(bool IfLoadNextLevel = false)
+    {
+        int curSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (!IfFirstEnterMap[curSceneIndex] && LevelIntroducer.Instance != null && IsCurrentSceneLevel())
+        {
+            print("关卡level" + (curSceneIndex + 1) + "初见");
+            IfFirstEnterMap[curSceneIndex] = true;
+            //显示介绍
+            LevelIntroducer.Instance.SetIntroduceImageAndEnable(SceneManager.GetActiveScene().buildIndex, StartLevel);
+            return true;
+        }
+        StartLevel();
+        return false;
     }
     public void StartLevel()
     {
         if (!IfStartLevel)
         {
+            //是关卡关，显示关卡开始的提示
+            if (IsCurrentSceneLevel())
+            {
+                SetGameMode(GamePlayMode.UIInteract);
+                m_UIManager.ShowLongTip("选择时间段以开始游戏");
+            }
             IfStartLevel = true;
-            m_UIManager.ShowLongTip("选择时间段以开始游戏");
         }
     }
     void Update()
@@ -133,13 +169,13 @@ public class GameMode : MonoBehaviour
             if (playMode == GamePlayMode.UIInteract)
             {
                 Time.timeScale = 0;
-                if (Player)
+                if (Player&&Player.rb)
                     Player.rb.velocity = Vector2.zero;
             }
             else
             {
                 Time.timeScale = 1;
-                if (Player)
+                if (Player && Player.rb)
                     Player.rb.velocity = Vector2.zero;
             }
 
@@ -150,8 +186,6 @@ public class GameMode : MonoBehaviour
                 else
                     timeSectionManager.SwitchSkillReplayButton(false);
             }
-
-
         }
     }
 
@@ -218,9 +252,8 @@ public class GameMode : MonoBehaviour
             playerDeathSection = -1;
         }
     }
-    IEnumerator LoadLevelCoroutine(float delay = 1f)
+    public IEnumerator LoadLevelCoroutine(float delay = 1f)
     {
-        print("delay" + delay + "S");
         yield return new WaitForSeconds(delay);
         LoadNextLevel();
     }
@@ -256,27 +289,20 @@ public class GameMode : MonoBehaviour
             player.transform.position = postion;
     }
 
-    /// <summary>
-    /// 废案，未采用
-    /// </summary>
-    /// <param name="IfLoadNextLevel"></param>
-    /// <returns></returns>
-    public bool CheckShowLevelIntroduce(bool IfLoadNextLevel = true)
-    {
-        int curSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        print(levelFisrtlyEnter[curSceneIndex] + " " + (LevelIntroducer.Instance != null));
-        if (!levelFisrtlyEnter[curSceneIndex] && LevelIntroducer.Instance != null)
-        {
-            levelFisrtlyEnter[curSceneIndex] = true;
-            //显示介绍
-            LevelIntroducer.Instance.SetIntroduceImageAndEnable(SceneManager.GetActiveScene().buildIndex, IfLoadNextLevel);
-            return true;
-        }
-        return false;
-    }
     public bool CanPlayerInput()
     {
         return gamePlayMode != GamePlayMode.UIInteract;
     }
+    bool IsCurrentSceneLevel()
+    {
+        return SceneManager.GetActiveScene().name.ToLower().Contains("lev");//其实应该是level，宽松一点
+    }
 
+    public void SetCursorImage()
+    {
+    }
+    public void SetCursorVisible(bool visible)
+    {
+        Cursor.visible = visible;
+    }
 }

@@ -51,7 +51,7 @@ public class ReplayManager : MonoBehaviour
     public void SkipReplay()
     {
         StopAllCoroutines();
-        GameMode.Instance.LoadNextLevel();
+        GameMode.Instance.StartCoroutine(GameMode.Instance.LoadLevelCoroutine(0.4f));
     }
     public void StartReplay(Vector2 startPos)
     {

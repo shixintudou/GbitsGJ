@@ -5,7 +5,6 @@ using UnityEngine;
 public class Heart : BasePick
 {
     // Start is called before the first frame update
-    float len = 0.5f;
     Vector2 startPos;
     public GameObject film;
     public float intensity;

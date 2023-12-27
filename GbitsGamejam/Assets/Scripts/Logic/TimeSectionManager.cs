@@ -29,6 +29,7 @@ public class TimeSectionManager : MonoBehaviour
     //当前时间段
     private int nowTimeSection;
     public int NowTimeSection { get => Mathf.Clamp(nowTimeSection, 0, GameMode.Instance.TimeSectionNum); }
+    //0为自由状态 1-N分别为选中了第N段可分配时间段
 
     private int nowBugsNum;
     public int NowBugsNum { get => nowBugsNum; }
@@ -40,7 +41,10 @@ public class TimeSectionManager : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         if (animator)
+        {
             animator.SetInteger("MaxSection", GameMode.Instance.TimeSectionNum);
+            animator.SetInteger("SelectSection",0);
+        }
     }
 
     // Update is called once per frame
@@ -86,7 +90,6 @@ public class TimeSectionManager : MonoBehaviour
             if (nowSectionData.ifStarted && !nowSectionData.ifEnded && NowTimeSection != 0)
             {
                 FinishThisTimeSection(); //自动结束当前时间段
-
                // GameMode.Instance.m_UIManager.ShowTip("请先结束当前时间段!");
                // return;
             }
@@ -209,7 +212,7 @@ public class TimeSectionManager : MonoBehaviour
                     break;
                 }
             if (ifAllSectionEnded)
-                GameMode.Instance.m_UIManager.ShowLongTip("似乎已无法继续游戏，请按下R键重试");
+                GameMode.Instance.m_UIManager.ShowLongTip("似乎已无法继续游戏，请重试（R键）");
             else
                 GameMode.Instance.m_UIManager.ShowTip("当前时间段已结束");
         }

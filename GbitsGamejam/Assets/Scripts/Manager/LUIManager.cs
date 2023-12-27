@@ -19,10 +19,10 @@ public class LUIManager : MonoBehaviour
 
     private void ShowTipUI_Internal(string str, string prefabName)
     {
-        print("显示提示 : " + str);
+     //   print("显示提示 : " + str);
         if (currentTip == null)
         {
-            currentTip = Instantiate<GameObject>(ResoucesManager.Instance.Resouces[prefabName]);
+            currentTip = Instantiate(ResoucesManager.Instance.Resouces[prefabName]);
             if (currentTip != null)
             {
                 currentTip.GetComponentInChildren<TextMeshProUGUI>().text = str;
